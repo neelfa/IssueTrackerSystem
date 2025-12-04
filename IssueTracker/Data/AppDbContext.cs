@@ -11,5 +11,6 @@ namespace IssueTracker.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Issue> Issues { get; set; }   // new table for issues
     }
 }

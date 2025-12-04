@@ -80,7 +80,18 @@ namespace IssueTracker.Controllers
                 return View("~/Views/Accounts/Login.cshtml");
             }
 
-            // temporary redirect after login
+            // Route based on role
+            if (user.Role == "Customer")
+                // go to the working CRUD page
+                return RedirectToAction("Index", "CustomerIssues");
+
+            if (user.Role == "Engineer")
+                return RedirectToAction("Index", "Engineer");
+
+            if (user.Role == "Admin")
+                return RedirectToAction("Index", "Admin");
+
+            // fallback
             return RedirectToAction("Index", "Home");
         }
     }
