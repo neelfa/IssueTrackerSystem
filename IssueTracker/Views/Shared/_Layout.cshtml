@@ -10,52 +10,197 @@
     <link rel="stylesheet" href="~/IssueTracker.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <!-- HEADER -->
-    <header class="border-bottom bg-white">
-        <div class="container d-flex align-items-center justify-content-between" style="height:64px;">
-            <!-- Left: logo + name -->
-            <div class="d-flex align-items-center gap-2">
-                <div class="d-flex align-items-center justify-content-center rounded bg-primary text-white fw-bold me-2"
-                     style="width:32px;height:32px;">
-                    IT
-                </div>
-                <span class="fs-4 fw-semibold">IssueTracker</span>
+    <!-- ENHANCED HEADER -->
+    <header class="header-modern border-bottom">
+        <div class="container d-flex align-items-center justify-content-between py-3">
+            <!-- Left: Enhanced logo + name -->
+            <div class="d-flex align-items-center gap-3">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="text-decoration-none d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center justify-content-center rounded-3 text-white fw-bold me-1"
+                         style="width:40px;height:40px;background:var(--gradient-primary);box-shadow:var(--shadow-sm);">
+                        <span style="font-size:18px;">IT</span>
+                    </div>
+                    <span class="fs-3 fw-bold text-dark">IssueTracker</span>
+                </a>
+                
+                <!-- Navigation Menu for larger screens -->
+                <nav class="d-none d-lg-flex align-items-center gap-4 ms-4">
+                    <a class="nav-link fw-medium text-decoration-none px-3 py-2 rounded-2 transition"
+                       asp-area="" asp-controller="Home" asp-action="Index"
+                       style="color:var(--secondary-color);transition:var(--transition);">
+                        Home
+                    </a>
+                    <a class="nav-link fw-medium text-decoration-none px-3 py-2 rounded-2"
+                       asp-area="" asp-controller="CustomerIssues" asp-action="Index"
+                       style="color:var(--secondary-color);transition:var(--transition);">
+                        My Issues
+                    </a>
+                    <a class="nav-link fw-medium text-decoration-none px-3 py-2 rounded-2"
+                       asp-area="" asp-controller="Admin" asp-action="Dashboard"
+                       style="color:var(--secondary-color);transition:var(--transition);">
+                        Dashboard
+                    </a>
+                </nav>
             </div>
 
-            <!-- Right: Login + Get Started -->
-            <nav class="d-flex align-items-center gap-2">
-                <a class="btn btn-link text-decoration-none"
-                   asp-area=""
-                   asp-controller="Account"
-                   asp-action="Login">
-                    Login
-                </a>
-                <a class="btn btn-primary"
-                   asp-area=""
-                   asp-controller="Account"
-                   asp-action="Register">
-                    Get Started
-                </a>
+            <!-- Right: Enhanced Login + Get Started -->
+            <nav class="d-flex align-items-center gap-3">
+                <!-- Mobile Menu Button -->
+                <button class="btn btn-outline-secondary d-lg-none" type="button" 
+                        data-bs-toggle="collapse" data-bs-target="#mobileNav" 
+                        aria-expanded="false" aria-controls="mobileNav">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                
+                <!-- Desktop Auth Buttons -->
+                <div class="d-none d-lg-flex align-items-center gap-2">
+                    <a class="btn btn-outline-primary px-4"
+                       asp-area=""
+                       asp-controller="Account"
+                       asp-action="Login">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                            <polyline points="10,17 15,12 10,7"></polyline>
+                            <line x1="15" y1="12" x2="3" y2="12"></line>
+                        </svg>
+                        Login
+                    </a>
+                    <a class="btn btn-primary px-4"
+                       asp-area=""
+                       asp-controller="Account"
+                       asp-action="Register">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <line x1="19" y1="8" x2="19" y2="14"></line>
+                            <line x1="22" y1="11" x2="16" y2="11"></line>
+                        </svg>
+                        Get Started
+                    </a>
+                </div>
             </nav>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div class="collapse d-lg-none border-top" id="mobileNav">
+            <div class="container py-3">
+                <div class="d-flex flex-column gap-2">
+                    <a class="nav-link fw-medium text-decoration-none px-3 py-2 rounded-2"
+                       asp-area="" asp-controller="Home" asp-action="Index"
+                       style="color:var(--secondary-color);">
+                        Home
+                    </a>
+                    <a class="nav-link fw-medium text-decoration-none px-3 py-2 rounded-2"
+                       asp-area="" asp-controller="CustomerIssues" asp-action="Index"
+                       style="color:var(--secondary-color);">
+                        My Issues
+                    </a>
+                    <a class="nav-link fw-medium text-decoration-none px-3 py-2 rounded-2"
+                       asp-area="" asp-controller="Admin" asp-action="Dashboard"
+                       style="color:var(--secondary-color);">
+                        Dashboard
+                    </a>
+                    <div class="border-top pt-3 mt-2">
+                        <div class="d-flex gap-2">
+                            <a class="btn btn-outline-primary flex-fill"
+                               asp-area=""
+                               asp-controller="Account"
+                               asp-action="Login">
+                                Login
+                            </a>
+                            <a class="btn btn-primary flex-fill"
+                               asp-area=""
+                               asp-controller="Account"
+                               asp-action="Register">
+                                Get Started
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div class="container-fluid px-0">
+        <main role="main" class="pb-4">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- ENHANCED FOOTER -->
+    <footer class="footer bg-white border-top">
         <div class="container">
-            &copy; 2025 - IssueTracker -
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row align-items-center py-4">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-2 mb-md-0">
+                        <div class="d-flex align-items-center justify-content-center rounded text-white fw-bold"
+                             style="width:24px;height:24px;background:var(--primary-color);font-size:12px;">
+                            IT
+                        </div>
+                        <span class="fw-semibold text-dark">IssueTracker</span>
+                    </div>
+                    <p class="text-muted mb-0 small">
+                        &copy; 2025 IssueTracker. Streamlining support issue management.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-md-end gap-4">
+                        <a asp-area="" asp-controller="Home" asp-action="Privacy" 
+                           class="text-decoration-none small fw-medium"
+                           style="color:var(--secondary-color);transition:var(--transition);">
+                            Privacy Policy
+                        </a>
+                        <a href="#" class="text-decoration-none small fw-medium"
+                           style="color:var(--secondary-color);transition:var(--transition);">
+                            Terms of Service
+                        </a>
+                        <a href="#" class="text-decoration-none small fw-medium"
+                           style="color:var(--secondary-color);transition:var(--transition);">
+                            Support
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <!-- Enhanced Navigation Interactions -->
+    <script>
+        // Add hover effects for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = 'var(--primary-light)';
+                this.style.color = 'var(--primary-color)';
+            });
+            link.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = 'transparent';
+                this.style.color = 'var(--secondary-color)';
+            });
+        });
+        
+        // Add smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && href !== '#!') {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+    </script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

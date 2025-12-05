@@ -2,43 +2,340 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="mb-3 text-center">Create your account</h2>
+<div class="d-flex align-items-center justify-content-center position-relative" style="min-height:100vh;background:linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 end-0 opacity-25" style="width:350px;height:350px;border-radius:50%;background:var(--gradient-primary);transform:translate(25%, -25%);"></div>
+    <div class="position-absolute bottom-0 start-0 opacity-10" style="width:280px;height:280px;border-radius:50%;background:var(--gradient-primary);transform:translate(-25%, 25%);"></div>
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-7 col-sm-9">
+                <!-- Register Card -->
+                <div class="card border-0 shadow-lg">
+                    <div class="card-body p-5">
+                        <!-- Header -->
+                        <div class="text-center mb-4">
+                            <a asp-controller="Home" asp-action="Index"
+                               class="d-inline-flex align-items-center text-decoration-none gap-2 mb-4">
+                                <div class="d-flex align-items-center justify-content-center rounded-3 text-white fw-bold"
+                                     style="width:48px;height:48px;background:var(--gradient-primary);box-shadow:var(--shadow-sm);">
+                                    <span style="font-size:20px;">IT</span>
+                                </div>
+                                <span class="fs-4 fw-bold text-dark">IssueTracker</span>
+                            </a>
+                            <h1 class="h3 fw-bold mb-2">Create your account</h1>
+                            <p class="text-muted mb-0">Join thousands of teams using IssueTracker</p>
+                        </div>
 
-            @if (ViewBag.Error != null)
-            {
-                <div class="alert alert-danger">@ViewBag.Error</div>
-            }
+                        <!-- Error Alert -->
+                        @if (ViewBag.Error != null)
+                        {
+                            <div class="alert alert-danger border-0 rounded-3 d-flex align-items-center gap-2 mb-4">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                </svg>
+                                <span>@ViewBag.Error</span>
+                            </div>
+                        }
 
-            <form method="post">
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input id="email" name="email" type="email" class="form-control" required />
+                        <!-- Registration Form -->
+                        <form method="post" class="needs-validation" novalidate>
+                            <div class="mb-4">
+                                <label for="email" class="form-label fw-medium">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                            <polyline points="22,6 12,13 2,6"></polyline>
+                                        </svg>
+                                    </span>
+                                    <input id="email" name="email" type="email"
+                                           class="form-control border-start-0" 
+                                           placeholder="Enter your email" 
+                                           required 
+                                           style="background-color:#f8f9fa;" />
+                                </div>
+                                <small class="text-muted">We'll never share your email with anyone else.</small>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="password" class="form-label fw-medium">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                            <circle cx="12" cy="16" r="1"></circle>
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                        </svg>
+                                    </span>
+                                    <input id="password" name="password" type="password"
+                                           class="form-control border-start-0" 
+                                           placeholder="Create a strong password" 
+                                           required 
+                                           minlength="6"
+                                           style="background-color:#f8f9fa;" />
+                                    <button class="btn btn-outline-secondary border-start-0" type="button" onclick="togglePassword()">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eye-icon">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <small class="text-muted">At least 6 characters with letters and numbers</small>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="role" class="form-label fw-medium">Account Type</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                    </span>
+                                    <select id="role" name="role" class="form-control border-start-0" required style="background-color:#f8f9fa;">
+                                        <option value="">Choose your role</option>
+                                        <option value="Customer">Customer - Submit and track issues</option>
+                                        <option value="Engineer">Engineer - Resolve support issues</option>
+                                        <option value="Admin">Admin - Manage system and users</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Role Information Cards -->
+                            <div class="row g-2 mb-4" id="roleInfo" style="display:none;">
+                                <div class="col-12">
+                                    <div class="border rounded-3 p-3 bg-light">
+                                        <div class="d-flex align-items-start gap-2">
+                                            <div class="role-icon flex-shrink-0 mt-1"></div>
+                                            <div>
+                                                <h6 class="mb-1 role-title"></h6>
+                                                <p class="text-muted small mb-0 role-description"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                    <label class="form-check-label text-muted" for="agreeTerms">
+                                        I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and 
+                                        <a href="#" class="text-decoration-none">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-3 fw-semibold">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <line x1="19" y1="8" x2="19" y2="14"></line>
+                                    <line x1="22" y1="11" x2="16" y2="11"></line>
+                                </svg>
+                                Create Account
+                            </button>
+                        </form>
+
+                        <!-- Divider -->
+                        <div class="position-relative my-4">
+                            <div class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">
+                                Or continue with
+                            </div>
+                            <hr class="border-top">
+                        </div>
+
+                        <!-- Social Registration Buttons -->
+                        <div class="row g-2 mb-4">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-outline-secondary w-100 py-2">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="me-2">
+                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                    </svg>
+                                    Google
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-outline-secondary w-100 py-2">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="me-2">
+                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                    </svg>
+                                    Facebook
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Login Link -->
+                        <div class="text-center">
+                            <span class="text-muted">Already have an account? </span>
+                            <a asp-controller="Account" asp-action="Login"
+                               class="text-decoration-none fw-medium">
+                                Sign in here
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input id="password" name="password" type="password" class="form-control" required />
+                <!-- Benefits -->
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h6 class="fw-semibold mb-3">Why choose IssueTracker?</h6>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width:32px;height:32px;background:var(--success-color)20;color:var(--success-color);">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="20,6 9,17 4,12"></polyline>
+                                        </svg>
+                                    </div>
+                                    <span class="small">Real-time tracking</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width:32px;height:32px;background:var(--primary-color)20;color:var(--primary-color);">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                            <path d="M9 9h6v6H9z"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="small">Team collaboration</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width:32px;height:32px;background:var(--warning-color)20;color:var(--warning-color);">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12,6 12,12 16,14"></polyline>
+                                        </svg>
+                                    </div>
+                                    <span class="small">24/7 support</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width:32px;height:32px;background:var(--info-color)20;color:var(--info-color);">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                                        </svg>
+                                    </div>
+                                    <span class="small">Secure & private</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label for="role" class="form-label">Role</label>
-                    <select id="role" name="role" class="form-select">
-                        <option value="Customer">Customer</option>
-                        <option value="Engineer">Engineer</option>
-                        <option value="Admin">Admin</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100">Register</button>
-            </form>
-
-            <div class="mt-3 text-center">
-                Already have an account?
-                <a asp-controller="Account" asp-action="Login">Login</a>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eye-icon');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.innerHTML = `
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+            `;
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.innerHTML = `
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            `;
+        }
+    }
+
+    // Role selection handler
+    document.getElementById('role').addEventListener('change', function() {
+        const roleInfo = document.getElementById('roleInfo');
+        const roleIcon = document.querySelector('.role-icon');
+        const roleTitle = document.querySelector('.role-title');
+        const roleDescription = document.querySelector('.role-description');
+        
+        const roleData = {
+            'Customer': {
+                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                </svg>`,
+                title: 'Customer Account',
+                description: 'Submit support tickets, track issue progress, and communicate with support team.'
+            },
+            'Engineer': {
+                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success-color)" stroke-width="2">
+                    <path d="M9 12l2 2 4-4"></path>
+                    <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1h9l4 4V12z"></path>
+                </svg>`,
+                title: 'Engineer Account',
+                description: 'Resolve support issues, manage assignments, and collaborate with team members.'
+            },
+            'Admin': {
+                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger-color)" stroke-width="2">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>`,
+                title: 'Admin Account',
+                description: 'Manage users, system settings, view analytics, and configure the platform.'
+            }
+        };
+        
+        if (this.value && roleData[this.value]) {
+            const data = roleData[this.value];
+            roleIcon.innerHTML = data.icon;
+            roleTitle.textContent = data.title;
+            roleDescription.textContent = data.description;
+            roleInfo.style.display = 'block';
+        } else {
+            roleInfo.style.display = 'none';
+        }
+    });
+
+    // Form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+    
+    // Add loading state to submit button
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const submitBtn = document.querySelector('button[type="submit"]');
+        if (this.checkValidity()) {
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Creating Account...
+            `;
+        }
+    });
+</script>

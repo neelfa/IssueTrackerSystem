@@ -1,0 +1,33 @@
+﻿@model IEnumerable<IssueTracker.Models.Issue>
+
+@{
+    ViewData["Title"] = "All Issues";
+}
+
+<div class="container py-4">
+    <h1 class="mb-3">All Issues</h1>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var issue in Model)
+            {
+                <tr>
+                    <td>@issue.Id</td>
+                    <td>@issue.Title</td>
+                    <td>@issue.Priority</td>
+                    <td>@issue.Status</td>
+                    <td>@issue.CreatedAt.ToLocalTime()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

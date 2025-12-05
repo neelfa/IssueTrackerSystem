@@ -1,0 +1,347 @@
+﻿@model IssueTracker.Models.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid py-4" style="background:#f8fafc;">
+    <!-- Header Section -->
+    <div class="container">
+        <div class="row align-items-center mb-4">
+            <div class="col">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle"
+                         style="width:48px;height:48px;background:var(--gradient-primary);color:white;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="mb-0 fw-bold">Admin Dashboard</h1>
+                        <p class="text-muted mb-0">Welcome back! Here's what's happening with your support system.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7,10 12,15 17,10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Export Report
+                    </button>
+                    <button class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 -1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Issue Statistics Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Issues</h6>
+                            <h2 class="fw-bold mb-0 text-primary">@Model.TotalIssues</h2>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center rounded-circle"
+                             style="width:48px;height:48px;background:var(--primary-light);color:var(--primary-color);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10,9 9,9 8,9"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="progress" style="height:4px;">
+                        <div class="progress-bar bg-primary" style="width:100%"></div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">All time issues logged</small>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card info">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted mb-1">Open Issues</h6>
+                            <h2 class="fw-bold mb-0 text-info">@Model.OpenIssues</h2>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center rounded-circle"
+                             style="width:48px;height:48px;background:#17a2b820;color:var(--info-color);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12,6 12,12 16,14"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="progress" style="height:4px;">
+                        <div class="progress-bar bg-info" style="width:@((double)Model.OpenIssues / Model.TotalIssues * 100)%"></div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">Awaiting attention</small>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card warning">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted mb-1">In Progress</h6>
+                            <h2 class="fw-bold mb-0 text-warning">@Model.InProgressIssues</h2>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center rounded-circle"
+                             style="width:48px;height:48px;background:#ffc10720;color:var(--warning-color);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="progress" style="height:4px;">
+                        <div class="progress-bar bg-warning" style="width:@((double)Model.InProgressIssues / Model.TotalIssues * 100)%"></div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">Being worked on</small>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card success">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted mb-1">Resolved</h6>
+                            <h2 class="fw-bold mb-0 text-success">@Model.ClosedIssues</h2>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center rounded-circle"
+                             style="width:48px;height:48px;background:#28a74520;color:var(--success-color);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="progress" style="height:4px;">
+                        <div class="progress-bar bg-success" style="width:@((double)Model.ClosedIssues / Model.TotalIssues * 100)%"></div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">Successfully completed</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Statistics -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                        <h5 class="fw-semibold mb-1">Users by Role</h5>
+                        <p class="text-muted small mb-3">Current system users distribution</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="text-center p-3 rounded-3" style="background:#0066cc10;">
+                                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                                         style="width:56px;height:56px;background:var(--primary-color);color:white;">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                    </div>
+                                    <h4 class="fw-bold text-primary mb-1">@Model.CustomersCount</h4>
+                                    <h6 class="text-muted mb-2">Customers</h6>
+                                    <div class="progress" style="height:6px;">
+                                        <div class="progress-bar bg-primary" style="width:75%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="text-center p-3 rounded-3" style="background:#28a74510;">
+                                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                                         style="width:56px;height:56px;background:var(--success-color);color:white;">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M9 12l2 2 4-4"></path>
+                                            <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1h9l4 4V12z"></path>
+                                        </svg>
+                                    </div>
+                                    <h4 class="fw-bold text-success mb-1">@Model.EngineersCount</h4>
+                                    <h6 class="text-muted mb-2">Engineers</h6>
+                                    <div class="progress" style="height:6px;">
+                                        <div class="progress-bar bg-success" style="width:45%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="text-center p-3 rounded-3" style="background:#dc354510;">
+                                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                                         style="width:56px;height:56px;background:var(--danger-color);color:white;">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <h4 class="fw-bold text-danger mb-1">@Model.AdminsCount</h4>
+                                    <h6 class="text-muted mb-2">Admins</h6>
+                                    <div class="progress" style="height:6px;">
+                                        <div class="progress-bar bg-danger" style="width:20%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                        <h5 class="fw-semibold mb-1">Quick Actions</h5>
+                        <p class="text-muted small mb-3">Manage your system</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="d-grid gap-3">
+                            <a asp-controller="Admin" asp-action="Users" class="btn btn-outline-primary d-flex align-items-center justify-content-start gap-2">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                Manage Users
+                            </a>
+                            <a asp-controller="Admin" asp-action="Issues" class="btn btn-outline-success d-flex align-items-center justify-content-start gap-2">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14,2 14,8 20,8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                                View All Issues
+                            </a>
+                            <button class="btn btn-outline-secondary d-flex align-items-center justify-content-start gap-2">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 -1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                                System Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Issues Table -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="fw-semibold mb-1">Recent Issues</h5>
+                        <p class="text-muted small mb-0">Latest support tickets in the system</p>
+                    </div>
+                    <a asp-controller="Admin" asp-action="Issues" class="btn btn-outline-primary btn-sm">
+                        View All
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ms-1">
+                            <polyline points="9,18 15,12 9,6"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th class="border-0 ps-4">Issue</th>
+                                <th class="border-0">Priority</th>
+                                <th class="border-0">Status</th>
+                                <th class="border-0">Created</th>
+                                <th class="border-0 pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var issue in Model.RecentIssues)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-medium text-dark">@issue.Title</div>
+                                        <small class="text-muted">ID: #@issue.Id</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge priority-@issue.Priority.ToLower()">
+                                            @issue.Priority
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge status-@issue.Status.ToLower().Replace(" ", "-")">
+                                            @issue.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="text-muted">@issue.CreatedAt.ToString("MMM dd, yyyy")</div>
+                                        <small class="text-muted">@issue.CreatedAt.ToString("HH:mm")</small>
+                                    </td>
+                                    <td class="pe-4">
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-secondary" title="View Details">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                </svg>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" title="Edit">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stats-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg) !important;
+    }
+    
+    .progress-bar {
+        transition: width 1s ease-in-out;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-group .btn {
+        transition: all 0.2s ease;
+    }
+    
+    .btn-group .btn:hover {
+        transform: scale(1.1);
+    }
+    
+    .table tbody tr:hover {
+        background-color: var(--primary-light) !important;
+        transform: scale(1.01);
+    }
+</style>

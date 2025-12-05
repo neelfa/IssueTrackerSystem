@@ -1,0 +1,41 @@
+﻿@model IEnumerable<IssueTracker.Models.User>
+
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<div class="container py-4">
+    <h1 class="mb-3">Manage Users</h1>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Change Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Email</td>
+                    <td>@user.Role</td>
+                    <td>
+                        <form asp-action="ChangeRole" method="post" class="d-flex gap-2">
+                            <input type="hidden" name="id" value="@user.Id" />
+                            <select name="role" class="form-select form-select-sm" style="width:auto;">
+                                <option value="Customer" selected="@(user.Role == "Customer")">Customer</option>
+                                <option value="Engineer" selected="@(user.Role == "Engineer")">Engineer</option>
+                                <option value="Admin" selected="@(user.Role == "Admin")">Admin</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
