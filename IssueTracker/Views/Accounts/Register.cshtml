@@ -2,17 +2,17 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="d-flex align-items-center justify-content-center position-relative" style="min-height:100vh;background:linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+<div class="d-flex align-items-center justify-content-center position-relative" style="min-height:100vh;background:linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);padding:2rem 0;">
     <!-- Background Elements -->
     <div class="position-absolute top-0 end-0 opacity-25" style="width:350px;height:350px;border-radius:50%;background:var(--gradient-primary);transform:translate(25%, -25%);"></div>
     <div class="position-absolute bottom-0 start-0 opacity-10" style="width:280px;height:280px;border-radius:50%;background:var(--gradient-primary);transform:translate(-25%, 25%);"></div>
     
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-5 col-md-7 col-sm-9">
+            <div class="col-lg-4 col-md-6 col-sm-8 col-10">
                 <!-- Register Card -->
                 <div class="card border-0 shadow-lg">
-                    <div class="card-body p-5">
+                    <div class="card-body p-4">
                         <!-- Header -->
                         <div class="text-center mb-4">
                             <a asp-controller="Home" asp-action="Index"
@@ -86,36 +86,19 @@
                                 <small class="text-muted">At least 6 characters with letters and numbers</small>
                             </div>
 
+                            <!-- Account Type Information -->
                             <div class="mb-4">
-                                <label for="role" class="form-label fw-medium">Account Type</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="9" cy="7" r="4"></circle>
-                                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                        </svg>
-                                    </span>
-                                    <select id="role" name="role" class="form-control border-start-0" required style="background-color:#f8f9fa;">
-                                        <option value="">Choose your role</option>
-                                        <option value="Customer">Customer - Submit and track issues</option>
-                                        <option value="Engineer">Engineer - Resolve support issues</option>
-                                        <option value="Admin">Admin - Manage system and users</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Role Information Cards -->
-                            <div class="row g-2 mb-4" id="roleInfo" style="display:none;">
-                                <div class="col-12">
-                                    <div class="border rounded-3 p-3 bg-light">
-                                        <div class="d-flex align-items-start gap-2">
-                                            <div class="role-icon flex-shrink-0 mt-1"></div>
-                                            <div>
-                                                <h6 class="mb-1 role-title"></h6>
-                                                <p class="text-muted small mb-0 role-description"></p>
-                                            </div>
+                                <div class="border rounded-3 p-3 bg-light">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <div class="flex-shrink-0 mt-1">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2">
+                                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Customer Account</h6>
+                                            <p class="text-muted small mb-0">You'll be able to submit support tickets, track issue progress, and communicate with our support team. Administrators can upgrade your account permissions if needed.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +114,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 py-3 fw-semibold">
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2">
                                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="9" cy="7" r="4"></circle>
@@ -187,17 +170,18 @@
                 <!-- Benefits -->
                 <div class="card border-0 shadow-sm mt-4">
                     <div class="card-body p-4">
-                        <h6 class="fw-semibold mb-3">Why choose IssueTracker?</h6>
+                        <h6 class="fw-semibold mb-3">What you get as a Customer</h6>
                         <div class="row g-3">
                             <div class="col-6">
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="rounded-circle d-flex align-items-center justify-content-center"
                                          style="width:32px;height:32px;background:var(--success-color)20;color:var(--success-color);">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="20,6 9,17 4,12"></polyline>
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14,2 14,8 20,8"></polyline>
                                         </svg>
                                     </div>
-                                    <span class="small">Real-time tracking</span>
+                                    <span class="small">Submit issues</span>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -205,17 +189,28 @@
                                     <div class="rounded-circle d-flex align-items-center justify-content-center"
                                          style="width:32px;height:32px;background:var(--primary-color)20;color:var(--primary-color);">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                            <path d="M9 9h6v6H9z"></path>
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
                                         </svg>
                                     </div>
-                                    <span class="small">Team collaboration</span>
+                                    <span class="small">Track progress</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="rounded-circle d-flex align-items-center justify-content-center"
                                          style="width:32px;height:32px;background:var(--warning-color)20;color:var(--warning-color);">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="small">Get updates</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width:32px;height:32px;background:var(--info-color)20;color:var(--info-color);">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <polyline points="12,6 12,12 16,14"></polyline>
@@ -224,19 +219,15 @@
                                     <span class="small">24/7 support</span>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                         style="width:32px;height:32px;background:var(--info-color)20;color:var(--info-color);">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                            <line x1="12" y1="19" x2="12" y2="23"></line>
-                                            <line x1="8" y1="23" x2="16" y2="23"></line>
-                                        </svg>
-                                    </div>
-                                    <span class="small">Secure & private</span>
-                                </div>
+                        </div>
+                        
+                        <div class="mt-3 p-2 bg-light rounded-2">
+                            <div class="small text-muted">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M12 16v-4M12 8h.01"></path>
+                                </svg>
+                                Need elevated permissions? Contact an administrator after registration.
                             </div>
                         </div>
                     </div>
@@ -265,50 +256,6 @@
             `;
         }
     }
-
-    // Role selection handler
-    document.getElementById('role').addEventListener('change', function() {
-        const roleInfo = document.getElementById('roleInfo');
-        const roleIcon = document.querySelector('.role-icon');
-        const roleTitle = document.querySelector('.role-title');
-        const roleDescription = document.querySelector('.role-description');
-        
-        const roleData = {
-            'Customer': {
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                </svg>`,
-                title: 'Customer Account',
-                description: 'Submit support tickets, track issue progress, and communicate with support team.'
-            },
-            'Engineer': {
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success-color)" stroke-width="2">
-                    <path d="M9 12l2 2 4-4"></path>
-                    <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1h9l4 4V12z"></path>
-                </svg>`,
-                title: 'Engineer Account',
-                description: 'Resolve support issues, manage assignments, and collaborate with team members.'
-            },
-            'Admin': {
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger-color)" stroke-width="2">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                </svg>`,
-                title: 'Admin Account',
-                description: 'Manage users, system settings, view analytics, and configure the platform.'
-            }
-        };
-        
-        if (this.value && roleData[this.value]) {
-            const data = roleData[this.value];
-            roleIcon.innerHTML = data.icon;
-            roleTitle.textContent = data.title;
-            roleDescription.textContent = data.description;
-            roleInfo.style.display = 'block';
-        } else {
-            roleInfo.style.display = 'none';
-        }
-    });
 
     // Form validation
     (function() {

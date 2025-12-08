@@ -1,96 +1,191 @@
 ﻿// Enhanced IssueTracker JavaScript
-// Modern interactions and animations
+// Modern interactions and animations (Simplified - Dark theme removed)
+// Added sidebar toggle functionality
 
 document.addEventListener('DOMContentLoaded', function() {
-    initializeThemeToggle();
     initializeAnimations();
     initializeInteractions();
     initializeResponsiveUtils();
     initializeLoadingStates();
     initializeTooltips();
     initializeAccessibility();
+    initializeSidebarToggle();
 });
 
-// Theme Toggle System
-function initializeThemeToggle() {
-    // Create theme toggle button
-    const themeToggle = document.createElement('button');
-    themeToggle.className = 'theme-toggle';
-    themeToggle.setAttribute('aria-label', 'Toggle theme');
-    themeToggle.setAttribute('title', 'Switch between light and dark theme');
+// Sidebar Toggle Functionality
+function initializeSidebarToggle() {
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
     
-    // Get initial theme
-    const currentTheme = localStorage.getItem('theme') || 
-                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (!sidebarToggle || !sidebar || !mainContent) return;
     
-    document.documentElement.setAttribute('data-theme', currentTheme);
+    // Set initial state based on screen size
+    function setInitialState() {
+        const isLargeScreen = window.innerWidth > 992;
+        const topHeader = document.querySelector('.top-header');
+        
+        if (isLargeScreen) {
+            sidebar.classList.remove('collapsed');
+            mainContent.classList.remove('expanded');
+            if (sidebarOverlay) sidebarOverlay.classList.remove('show');
+            if (topHeader) {
+                topHeader.style.left = 'var(--sidebar-width)';
+            }
+        } else {
+            sidebar.classList.add('collapsed');
+            mainContent.classList.add('expanded');
+            sidebar.classList.remove('show');
+            if (topHeader) {
+                topHeader.style.left = '0';
+            }
+        }
+    }
     
-    // Set initial icon
-    updateThemeIcon(themeToggle, currentTheme);
-    
-    // Add click handler
-    themeToggle.addEventListener('click', function() {
-        const current = document.documentElement.getAttribute('data-theme');
-        const newTheme = current === 'dark' ? 'light' : 'dark';
+    // Toggle sidebar function
+    function toggleSidebar() {
+        const isLargeScreen = window.innerWidth > 992;
+        const topHeader = document.querySelector('.top-header');
         
-        // Add transition class to prevent flash
-        document.documentElement.classList.add('theme-transitioning');
-        
-        // Update theme
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        
-        // Update icon
-        updateThemeIcon(themeToggle, newTheme);
-        
-        // Remove transition class after animation
-        setTimeout(() => {
-            document.documentElement.classList.remove('theme-transitioning');
-        }, 300);
+        if (isLargeScreen) {
+            // Desktop behavior - slide sidebar and adjust main content
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+            
+            // Update header positioning
+            if (topHeader) {
+                if (sidebar.classList.contains('collapsed')) {
+                    topHeader.style.left = '0';
+                } else {
+                    topHeader.style.left = 'var(--sidebar-width)';
+                }
+            }
+            
+            // Update toggle button icon
+            updateToggleIcon();
+            
+            // Store preference
+            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+        } else {
+            // Mobile behavior - overlay sidebar
+            const isOpen = sidebar.classList.contains('show');
+            
+            if (isOpen) {
+                sidebar.classList.remove('show');
+                if (sidebarOverlay) sidebarOverlay.classList.remove('show');
+                document.body.style.overflow = '';
+            } else {
+                sidebar.classList.add('show');
+                if (sidebarOverlay) sidebarOverlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            // Ensure header is positioned correctly for mobile
+            if (topHeader) {
+                topHeader.style.left = '0';
+            }
+        }
         
         // Announce to screen readers
-        const message = newTheme === 'dark' ? 'Dark theme activated' : 'Light theme activated';
-        announceToScreenReader(message);
+        const isCollapsed = sidebar.classList.contains('collapsed') || !sidebar.classList.contains('show');
+        announceToScreenReader(isCollapsed ? 'Sidebar collapsed' : 'Sidebar expanded');
+    }
+    
+    // Update toggle button icon
+    function updateToggleIcon() {
+        const isCollapsed = sidebar.classList.contains('collapsed');
+        const icon = sidebarToggle.querySelector('svg');
+        
+        if (isCollapsed) {
+            // Show "expand" icon
+            icon.innerHTML = `
+                <path d="M5 12h14"></path>
+                <path d="M12 5l7 7-7 7"></path>
+            `;
+            sidebarToggle.setAttribute('aria-label', 'Expand Sidebar');
+        } else {
+            // Show "collapse" icon (hamburger)
+            icon.innerHTML = `
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            `;
+            sidebarToggle.setAttribute('aria-label', 'Collapse Sidebar');
+        }
+    }
+    
+    // Restore user preference on large screens
+    function restorePreference() {
+        const isLargeScreen = window.innerWidth > 992;
+        const topHeader = document.querySelector('.top-header');
+        
+        if (isLargeScreen) {
+            const savedState = localStorage.getItem('sidebarCollapsed');
+            if (savedState === 'true') {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('expanded');
+                if (topHeader) {
+                    topHeader.style.left = '0';
+                }
+            } else {
+                if (topHeader) {
+                    topHeader.style.left = 'var(--sidebar-width)';
+                }
+            }
+            updateToggleIcon();
+        } else {
+            // Mobile - header always spans full width
+            if (topHeader) {
+                topHeader.style.left = '0';
+            }
+        }
+    }
+    
+    // Event listeners
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    
+    // Close mobile sidebar when overlay is clicked
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', function() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+        });
+    }
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        setInitialState();
+        restorePreference();
     });
     
-    // Add to page
-    document.body.appendChild(themeToggle);
-    
-    // Listen for system theme changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!localStorage.getItem('theme')) {
-            const newTheme = e.matches ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            updateThemeIcon(themeToggle, newTheme);
+    // Keyboard navigation
+    sidebarToggle.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleSidebar();
         }
     });
+    
+    // Close mobile sidebar when pressing Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && window.innerWidth <= 992) {
+            if (sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+                if (sidebarOverlay) sidebarOverlay.classList.remove('show');
+                document.body.style.overflow = '';
+                sidebarToggle.focus();
+            }
+        }
+    });
+    
+    // Initialize
+    setInitialState();
+    restorePreference();
 }
 
-function updateThemeIcon(button, theme) {
-    const lightIcon = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-    `;
-    
-    const darkIcon = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-    `;
-    
-    button.innerHTML = theme === 'dark' ? lightIcon : darkIcon;
-    button.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
-    button.setAttribute('title', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
-}
+// Removed theme toggle functionality - simplified for light theme only
 
 // Animation System
 function initializeAnimations() {
@@ -604,7 +699,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Performance optimization
+// Performance optimization - simplified without theme detection
 window.addEventListener('load', function() {
     // Remove loading classes after page is fully loaded
     document.body.classList.add('loaded');
@@ -615,16 +710,9 @@ window.addEventListener('load', function() {
             el.classList.add('animate-in');
         });
     }, 100);
-
-    // Preload theme resources
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.head.insertAdjacentHTML('beforeend', 
-            '<link rel="preload" as="image" href="data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\'></svg>">'
-        );
-    }
 });
 
-// Add CSS for ripple animation
+// Add CSS for ripple animation - simplified without theme transitions
 const style = document.createElement('style');
 style.textContent = `
     @keyframes ripple {
@@ -632,10 +720,6 @@ style.textContent = `
             transform: scale(4);
             opacity: 0;
         }
-    }
-    
-    .theme-transitioning * {
-        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
     }
 `;
 document.head.appendChild(style);

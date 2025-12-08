@@ -1,0 +1,215 @@
+@model IssueTracker.Models.IssueDetailViewModel
+
+@{
+    ViewData["Title"] = "Issue Details - Engineer";
+    var statusClass = Model.Issue.Status.ToLower() switch
+    {
+        "open" => "status-open",
+        "inprogress" => "status-in-progress",
+        "resolved" => "status-closed",
+        "closed" => "status-closed",
+        _ => "status-open"
+    };
+    
+    var priorityClass = Model.Issue.Priority.ToLower() switch
+    {
+        "high" => "priority-high",
+        "medium" => "priority-medium",
+        "low" => "priority-low",
+        _ => "priority-medium"
+    };
+}
+
+<div class="container py-4">
+    <!-- Issue Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2 class="fw-bold">@Model.Issue.Title</h2>
+            <div class="d-flex gap-2 align-items-center">
+                <span class="badge @priorityClass">@Model.Issue.Priority Priority</span>
+                <span class="badge @statusClass">@Model.Issue.Status</span>
+                <span class="text-muted">Issue #@Model.Issue.Id</span>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Index" class="btn btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                    <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                </svg>
+                Back to Issues
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Issue Description -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Issue Description</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">@Model.Issue.Description</p>
+                </div>
+            </div>
+
+            <!-- Status Update Panel -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Update Issue Status</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateStatus" method="post" class="d-flex gap-2 align-items-center">
+                        <input type="hidden" name="id" value="@Model.Issue.Id" />
+                        <select name="status" class="form-select" style="max-width: 200px;">
+                            <option value="Open" selected="@(Model.Issue.Status == "Open")">Open</option>
+                            <option value="InProgress" selected="@(Model.Issue.Status == "InProgress")">In Progress</option>
+                            <option value="Resolved" selected="@(Model.Issue.Status == "Resolved")">Resolved</option>
+                            <option value="Closed" selected="@(Model.Issue.Status == "Closed")">Closed</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Update Status</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Comments & Notes (@Model.Comments.Count)</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Comments.Any())
+                    {
+                        foreach (var comment in Model.Comments)
+                        {
+                            <div class="border-bottom pb-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong>@comment.CreatedByEmail</strong>
+                                    <small class="text-muted">@comment.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy 'at' h:mm tt")</small>
+                                </div>
+                                <p class="mb-0">@comment.Content</p>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center py-4">No comments yet.</p>
+                    }
+
+                    <!-- Add Comment Form -->
+                    <div class="mt-4">
+                        <form asp-action="AddComment" method="post">
+                            <input type="hidden" name="issueId" value="@Model.Issue.Id" />
+                            <div class="mb-3">
+                                <label for="content" class="form-label fw-medium">Add a note or comment</label>
+                                <textarea name="content" id="content" rows="3" class="form-control" 
+                                          placeholder="Add technical notes, progress updates, or communicate with the customer..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                                </svg>
+                                Add Comment
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Issue Sidebar -->
+        <div class="col-lg-4">
+            <!-- Issue Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">Issue Information</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="mb-0">
+                        <dt class="small text-muted">Created By</dt>
+                        <dd class="mb-3">@Model.Issue.CreatedByEmail</dd>
+
+                        <dt class="small text-muted">Created On</dt>
+                        <dd class="mb-3">@Model.Issue.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy 'at' h:mm tt")</dd>
+
+                        @if (Model.Issue.UpdatedAt.HasValue)
+                        {
+                            <dt class="small text-muted">Last Updated</dt>
+                            <dd class="mb-3">@Model.Issue.UpdatedAt.Value.ToLocalTime().ToString("MMM dd, yyyy 'at' h:mm tt")</dd>
+                        }
+
+                        <dt class="small text-muted">Current Status</dt>
+                        <dd class="mb-3"><span class="badge @statusClass">@Model.Issue.Status</span></dd>
+
+                        <dt class="small text-muted">Priority</dt>
+                        <dd class="mb-0"><span class="badge @priorityClass">@Model.Issue.Priority</span></dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Assignment Panel -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">Assignment</h6>
+                </div>
+                <div class="card-body">
+                    @if (string.IsNullOrEmpty(Model.Issue.AssignedToEmail))
+                    {
+                        <p class="text-warning mb-3">This issue is not assigned to anyone.</p>
+                        <form asp-action="Take" method="post" class="mb-2">
+                            <input type="hidden" name="id" value="@Model.Issue.Id" />
+                            <button type="submit" class="btn btn-success w-100">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                </svg>
+                                Take This Issue
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="mb-3">
+                            <strong>Assigned to:</strong> @Model.Issue.AssignedToEmail
+                        </div>
+                    }
+
+                    @if (Model.CanAssign && Model.Engineers.Any())
+                    {
+                        <form asp-action="Assign" method="post">
+                            <input type="hidden" name="id" value="@Model.Issue.Id" />
+                            <div class="mb-2">
+                                <label for="assignedToEmail" class="form-label small">Reassign to:</label>
+                                <select name="assignedToEmail" id="assignedToEmail" class="form-select form-select-sm">
+                                    <option value="">Select Engineer...</option>
+                                    @foreach (var engineer in Model.Engineers)
+                                    {
+                                        <option value="@engineer.Email" selected="@(engineer.Email == Model.Issue.AssignedToEmail)">
+                                            @engineer.Email
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary btn-sm w-100">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                Assign
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <script>
+        alert('@TempData["Error"]');
+    </script>
+}

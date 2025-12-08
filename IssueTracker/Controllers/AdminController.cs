@@ -1,17 +1,16 @@
 ﻿using IssueTracker.Data;
 using IssueTracker.Models;
+using IssueTracker.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : BaseController
     {
         private readonly AppDbContext _context;
 
-        public AdminController(AppDbContext context)
+        public AdminController(AppDbContext context, IAuthService authService) : base(authService)
         {
             _context = context;
         }
@@ -19,6 +18,9 @@ namespace IssueTracker.Controllers
         // GET: /Admin/Dashboard
         public async Task<IActionResult> Dashboard()
         {
+            var authResult = RequireRole("Admin");
+            if (authResult is not EmptyResult) return authResult;
+
             var model = new AdminDashboardViewModel
             {
                 // issue stats
@@ -39,40 +41,201 @@ namespace IssueTracker.Controllers
                     .ToListAsync()
             };
 
-            return View(model); // Views/Admin/Dashboard.cshtml
+            return View(model);
         }
 
-        // GET: /Admin/Issues
+        // GET: /Admin/Issues (Admin can see all issues)
         public async Task<IActionResult> Issues()
         {
+            var authResult = RequireRole("Admin");
+            if (authResult is not EmptyResult) return authResult;
+
             var issues = await _context.Issues
                 .OrderByDescending(i => i.CreatedAt)
                 .ToListAsync();
 
-            return View(issues); // Views/Admin/Issues.cshtml
+            return View(issues);
         }
 
-        // GET: /Admin/Users
+        // Issue Details for Admin (same as Engineer but with admin privileges)
+        public async Task<IActionResult> IssueDetails(int id)
+        {
+            var authResult = RequireRole("Admin");
+            if (authResult is not EmptyResult) return authResult;
+
+            var issue = await _context.Issues
+                .Include(i => i.Comments)
+                .FirstOrDefaultAsync(i => i.Id == id);
+                
+            if (issue == null) return NotFound();
+
+            var engineers = await _authService.GetUsersByRoleAsync("Engineer");
+
+            var viewModel = new IssueDetailViewModel
+            {
+                Issue = issue,
+                Comments = issue.Comments.OrderBy(c => c.CreatedAt).ToList(),
+                CanEdit = true,
+                CanAssign = true,
+                Engineers = engineers
+            };
+
+            return View("Details", viewModel); // Use same view as Engineer
+        }
+
+        // GET: /Admin/Users (User Management)
         public async Task<IActionResult> Users()
         {
+            var authResult = RequireRole("Admin");
+            if (authResult is not EmptyResult) return authResult;
+
             var users = await _context.Users
-                .OrderBy(u => u.Email)
+                .OrderBy(u => u.Role)
+                .ThenBy(u => u.Email)
                 .ToListAsync();
 
-            return View(users); // Views/Admin/Users.cshtml
+            var viewModel = new UserManagementViewModel
+            {
+                Users = users
+            };
+
+            return View(viewModel);
         }
 
         // POST: /Admin/ChangeRole
         [HttpPost]
         public async Task<IActionResult> ChangeRole(int id, string role)
         {
+            var authResult = RequireRole("Admin");
+            if (authResult is not EmptyResult) return authResult;
+
+            var validRoles = new[] { "Customer", "Engineer", "Admin" };
+            if (!validRoles.Contains(role))
+            {
+                TempData["Error"] = "Invalid role selected.";
+                return RedirectToAction(nameof(Users));
+            }
+
             var user = await _context.Users.FindAsync(id);
-            if (user == null) return NotFound();
+            if (user == null)
+            {
+                TempData["Error"] = "User not found.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            // Prevent admins from changing their own role (to avoid lockout)
+            var currentUserEmail = GetCurrentUserEmail();
+            if (user.Email == currentUserEmail)
+            {
+                TempData["Error"] = "You cannot change your own role.";
+                return RedirectToAction(nameof(Users));
+            }
 
             user.Role = role;
             await _context.SaveChangesAsync();
 
+            TempData["Success"] = $"Role updated successfully for {user.Email}.";
             return RedirectToAction(nameof(Users));
+        }
+
+        // POST: /Admin/DeleteUser
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var authResult = RequireRole("Admin");
+            if (authResult is not EmptyResult) return authResult;
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                TempData["Error"] = "User not found.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            // Prevent admins from deleting themselves
+            var currentUserEmail = GetCurrentUserEmail();
+            if (user.Email == currentUserEmail)
+            {
+                TempData["Error"] = "You cannot delete your own account.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"User {user.Email} deleted successfully.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        // Admin can do everything Engineers can do for issues
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatus(int id, string status)
+        {
+            var authResult = RequireRole("Admin");
+            if (authResult is not EmptyResult) return authResult;
+
+            var issue = await _context.Issues.FindAsync(id);
+            if (issue == null) return NotFound();
+
+            var validStatuses = new[] { "Open", "InProgress", "Resolved", "Closed" };
+            if (!validStatuses.Contains(status))
+            {
+                TempData["Error"] = "Invalid status.";
+                return RedirectToAction(nameof(IssueDetails), new { id });
+            }
+
+            issue.Status = status;
+            issue.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(IssueDetails), new { id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Assign(int id, string assignedToEmail)
+        {
+            var authResult = RequireRole("Admin");
+            if (authResult is not EmptyResult) return authResult;
+
+            var issue = await _context.Issues.FindAsync(id);
+            if (issue == null) return NotFound();
+
+            issue.AssignedToEmail = assignedToEmail;
+            issue.UpdatedAt = DateTime.UtcNow;
+            if (issue.Status == "Open")
+            {
+                issue.Status = "InProgress";
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(IssueDetails), new { id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddComment(int issueId, string content)
+        {
+            var authResult = RequireRole("Admin");
+            if (authResult is not EmptyResult) return authResult;
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                TempData["Error"] = "Comment cannot be empty.";
+                return RedirectToAction(nameof(IssueDetails), new { id = issueId });
+            }
+
+            var userEmail = GetCurrentUserEmail();
+            var comment = new Comment
+            {
+                Content = content,
+                CreatedAt = DateTime.UtcNow,
+                CreatedByEmail = userEmail!,
+                IssueId = issueId
+            };
+
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(IssueDetails), new { id = issueId });
         }
     }
 }

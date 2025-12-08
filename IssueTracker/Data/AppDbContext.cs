@@ -11,6 +11,19 @@ namespace IssueTracker.Data
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Issue> Issues { get; set; }   // new table for issues
+        public DbSet<Issue> Issues { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            
+            // Configure Comment-Issue relationship
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Issue)
+                .WithMany(i => i.Comments)
+                .HasForeignKey(c => c.IssueId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }
