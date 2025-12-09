@@ -110,12 +110,18 @@ namespace IssueTracker.Controllers
             {
                 Issue = issue,
                 Comments = issue.Comments.OrderBy(c => c.CreatedAt).ToList(),
-                CanEdit = true,
-                CanAssign = true,
+                CanEdit = false, // Admin can only view, not edit
+                CanAssign = false, // Admin cannot assign
                 Engineers = engineers
             };
 
             return View("Details", viewModel); // Now uses Admin/Details.cshtml
+        }
+
+        // Admin Details action - routes to the same logic as IssueDetails (View Only)
+        public async Task<IActionResult> Details(int id)
+        {
+            return await IssueDetails(id);
         }
 
         // GET: /Admin/Users (User Management)
@@ -203,6 +209,7 @@ namespace IssueTracker.Controllers
         }
 
         // Admin can do everything Engineers can do for issues
+        /* DISABLED - Admin Details is now view-only
         [HttpPost]
         public async Task<IActionResult> UpdateStatus(int id, string status)
         {
@@ -272,5 +279,6 @@ namespace IssueTracker.Controllers
 
             return RedirectToAction(nameof(IssueDetails), new { id = issueId });
         }
+        */
     }
 }

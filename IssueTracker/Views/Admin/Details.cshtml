@@ -1,7 +1,7 @@
 @model IssueTracker.Models.IssueDetailViewModel
 
 @{
-    ViewData["Title"] = "Issue Details - Admin";
+    ViewData["Title"] = "Issue Details - Admin (View Only)";
     var statusClass = Model.Issue.Status?.ToLower() switch
     {
         "open" => "status-open",
@@ -21,30 +21,6 @@
 }
 
 <div class="container py-4 admin-page">
-    <!-- Success/Error Messages -->
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success border-0 rounded-3 d-flex align-items-center gap-2 mb-4">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22,4 12,14.01 9,11.01"></polyline>
-            </svg>
-            <span>@TempData["Success"]</span>
-        </div>
-    }
-
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger border-0 rounded-3 d-flex align-items-center gap-2 mb-4">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="15" y1="9" x2="9" y2="15"></line>
-                <line x1="9" y1="9" x2="15" y2="15"></line>
-            </svg>
-            <span>@TempData["Error"]</span>
-        </div>
-    }
-
     <!-- Issue Header -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-4 gap-3">
         <div class="flex-grow-1">
@@ -52,10 +28,8 @@
                 <div class="d-inline-flex align-items-center justify-content-center rounded-circle admin-header-icon"
                      style="width:48px;height:48px;">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14,2 14,8 20,8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
                     </svg>
                 </div>
                 <div>
@@ -64,6 +38,7 @@
                         <span class="badge @priorityClass">@(Model.Issue.Priority ?? "Medium") Priority</span>
                         <span class="badge @statusClass">@(Model.Issue.Status ?? "Open")</span>
                         <span class="text-muted">Issue #@Model.Issue.Id</span>
+                        <span class="badge badge-secondary">View Only</span>
                     </div>
                 </div>
             </div>
@@ -96,65 +71,11 @@
                 </div>
             </div>
 
-            <!-- Admin Controls -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header admin-bg-blue-light">
-                    <h5 class="mb-0 admin-text-blue">Admin Controls</h5>
-                </div>
-                <div class="card-body admin-controls">
-                    <div class="row g-3">
-                        <!-- Status Update -->
-                        <div class="col-12 col-md-6">
-                            <form asp-action="UpdateStatus" method="post">
-                                <input type="hidden" name="id" value="@Model.Issue.Id" />
-                                <label class="form-label fw-medium small">Update Status</label>
-                                <div class="d-flex gap-2">
-                                    <select name="status" class="form-select form-select-sm flex-grow-1">
-                                        <option value="Open" selected="@(Model.Issue.Status == "Open")">Open</option>
-                                        <option value="InProgress" selected="@(Model.Issue.Status == "InProgress")">In Progress</option>
-                                        <option value="Resolved" selected="@(Model.Issue.Status == "Resolved")">Resolved</option>
-                                        <option value="Closed" selected="@(Model.Issue.Status == "Closed")">Closed</option>
-                                    </select>
-                                    <button type="submit" class="btn btn-primary btn-sm px-3">Update</button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Assignment -->
-                        <div class="col-12 col-md-6">
-                            @if (Model.CanAssign && Model.Engineers.Any())
-                            {
-                                <form asp-action="Assign" method="post">
-                                    <input type="hidden" name="id" value="@Model.Issue.Id" />
-                                    <label class="form-label fw-medium small">Assign Engineer</label>
-                                    <div class="d-flex gap-2">
-                                        <select name="assignedToEmail" class="form-select form-select-sm flex-grow-1">
-                                            <option value="">Unassigned</option>
-                                            @foreach (var engineer in Model.Engineers)
-                                            {
-                                                <option value="@engineer.Email" selected="@(engineer.Email == Model.Issue.AssignedToEmail)">
-                                                    @engineer.Email
-                                                </option>
-                                            }
-                                        </select>
-                                        <button type="submit" class="btn btn-success btn-sm px-3">Assign</button>
-                                    </div>
-                                </form>
-                            }
-                            else
-                            {
-                                <label class="form-label fw-medium small">Assignment</label>
-                                <p class="text-muted small mb-0">@(string.IsNullOrEmpty(Model.Issue.AssignedToEmail) ? "Unassigned" : Model.Issue.AssignedToEmail)</p>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Comments Section -->
+            <!-- Comments Section (Read-Only) -->
             <div class="card border-0 shadow-sm comments-section">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 admin-text-blue">Comments & Communication (@Model.Comments.Count)</h5>
+                    <small class="text-muted">Read Only</small>
                 </div>
                 <div class="card-body">
                     @if (Model.Comments.Any())
@@ -176,27 +97,18 @@
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted mb-2">
                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                             </svg>
-                            <p class="text-muted">No comments yet. Start the conversation!</p>
+                            <p class="text-muted">No comments yet.</p>
                         </div>
                     }
 
-                    <!-- Add Comment Form -->
-                    <div class="mt-4">
-                        <form asp-action="AddComment" method="post">
-                            <input type="hidden" name="issueId" value="@Model.Issue.Id" />
-                            <div class="mb-3">
-                                <label for="content" class="form-label fw-medium">Add Admin Comment</label>
-                                <textarea name="content" id="content" rows="4" class="form-control" 
-                                          placeholder="Add administrative notes, status updates, or communicate with the customer and team..." required></textarea>
-                                <small class="text-muted">This comment will be visible to all users with access to this issue.</small>
-                            </div>
-                            <button type="submit" class="btn btn-primary">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
-                                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
-                                </svg>
-                                Add Comment
-                            </button>
-                        </form>
+                    <!-- View Only Notice -->
+                    <div class="alert alert-info border-0 mt-4 d-flex align-items-center gap-2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span>This is a read-only view. Contact an engineer or the system administrator to make changes to this issue.</span>
                     </div>
                 </div>
             </div>
@@ -260,8 +172,39 @@
                     </dl>
                 </div>
             </div>
+
+            <!-- Quick Actions (View Only) -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header admin-bg-blue-light">
+                    <h6 class="mb-0 admin-text-blue">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-secondary btn-sm" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                            </svg>
+                            Edit Status (Disabled)
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                            </svg>
+                            Assign Engineer (Disabled)
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            Add Comment (Disabled)
+                        </button>
+                    </div>
+                    <small class="text-muted mt-2 d-block">Administrative actions are disabled in view-only mode.</small>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<link href="~/css/admin-dashboard.css" rel="stylesheet" /></style>
+<link href="~/css/admin-dashboard.css" rel="stylesheet" />
