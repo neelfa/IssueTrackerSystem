@@ -1,17 +1,24 @@
 /* Modern Design System */
 :root {
-  --primary-color: #0066cc;
-  --primary-dark: #0052a3;
+  /* Updated Color Palette - Admin Dashboard Colors */
+  --primary-color: #229dd8;  /* Blue */
+  --primary-dark: #1a7ea6;
   --primary-light: #e6f2ff;
   --secondary-color: #6c757d;
-  --success-color: #28a745;
-  --warning-color: #ffc107;
-  --danger-color: #dc3545;
-  --info-color: #17a2b8;
+  --success-color: #80bd56;  /* Green */
+  --warning-color: #f69b01;  /* Orange */
+  --danger-color: #be0219;   /* Red */
+  --info-color: #229dd8;     /* Blue */
   --light-color: #f8f9fa;
   --dark-color: #343a40;
   
-  --gradient-primary: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+  /* New Admin Color Variables */
+  --admin-blue: #229dd8;
+  --admin-red: #be0219;
+  --admin-green: #80bd56;
+  --admin-orange: #f69b01;
+  
+  --gradient-primary: linear-gradient(135deg, #229dd8 0%, #1a7ea6 100%);
   --gradient-light: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   
   --border-radius: 8px;
@@ -405,7 +412,7 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-color);
 }
 
-/* Status Badges */
+/* Status Badges - Updated with new colors */
 .badge {
   border-radius: var(--border-radius);
   font-weight: 500;
@@ -419,39 +426,39 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .status-open {
-  background-color: var(--info-color);
+  background-color: var(--admin-orange);
   color: white;
-  border-color: var(--info-color);
+  border-color: var(--admin-orange);
 }
 
 .status-in-progress {
-  background-color: var(--warning-color);
-  color: var(--dark-color);
-  border-color: var(--warning-color);
+  background-color: var(--admin-red);
+  color: white;
+  border-color: var(--admin-red);
 }
 
 .status-closed {
-  background-color: var(--success-color);
+  background-color: var(--admin-green);
   color: white;
-  border-color: var(--success-color);
+  border-color: var(--admin-green);
 }
 
 .priority-high {
-  background-color: var(--danger-color);
+  background-color: var(--admin-red);
   color: white;
-  border-color: var(--danger-color);
+  border-color: var(--admin-red);
 }
 
 .priority-medium {
-  background-color: var(--warning-color);
-  color: var(--dark-color);
-  border-color: var(--warning-color);
+  background-color: var(--admin-orange);
+  color: white;
+  border-color: var(--admin-orange);
 }
 
 .priority-low {
-  background-color: var(--secondary-color);
+  background-color: var(--admin-blue);
   color: white;
-  border-color: var(--secondary-color);
+  border-color: var(--admin-blue);
 }
 
 /* Enhanced Forms */
@@ -2313,7 +2320,6 @@ footer {
     -webkit-transform: none !important;
     border: 1px solid #e0e6ed !important;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1) !important;
-    z-index: 9999 !important;
 }
 
 .dropdown-item,

@@ -1,0 +1,466 @@
+/* Admin Dashboard Color Palette CSS */
+/* Color Palette: #229dd8 (Blue), #be0219 (Red), #80bd56 (Green), #f69b01 (Orange) */
+/* Dashboard visual elements only - buttons keep original styling */
+
+:root {
+    /* New Color Palette Variables */
+    --admin-blue: #229dd8;
+    --admin-red: #be0219;
+    --admin-green: #80bd56;
+    --admin-orange: #f69b01;
+    
+    /* Color aliases for better semantic understanding */
+    --admin-primary: #229dd8;
+    --admin-secondary: #f69b01;
+    --admin-success: #80bd56;
+    --admin-danger: #be0219;
+    --admin-warning: #f69b01;
+    --admin-info: #229dd8;
+    
+    /* Light variants for backgrounds */
+    --admin-blue-light: rgba(34, 157, 216, 0.1);
+    --admin-red-light: rgba(190, 2, 25, 0.1);
+    --admin-green-light: rgba(128, 189, 86, 0.1);
+    --admin-orange-light: rgba(246, 155, 1, 0.1);
+    
+    /* Dark variants for hover states */
+    --admin-blue-dark: #1a7ea6;
+    --admin-red-dark: #9a0216;
+    --admin-green-dark: #66964a;
+    --admin-orange-dark: #d4870a;
+}
+
+/* Admin Dashboard Layout */
+.admin-dashboard-container {
+    background: #f8fafc;
+}
+
+/* Stats Cards with New Color Scheme */
+.stats-card {
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    background: white;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--admin-primary);
+}
+
+.stats-card.primary::before {
+    background: var(--admin-blue);
+}
+
+.stats-card.info::before {
+    background: var(--admin-orange);
+}
+
+.stats-card.warning::before {
+    background: var(--admin-red);
+}
+
+.stats-card.success::before {
+    background: var(--admin-green);
+}
+
+/* Search and Filter Card Styling */
+.search-filter-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border: 1px solid #e3f2fd !important;
+}
+
+.search-input {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.search-input:focus {
+    border-color: var(--admin-blue);
+    box-shadow: 0 0 0 0.2rem rgba(34, 157, 216, 0.15);
+    background: white;
+}
+
+.filter-select {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.filter-select:focus {
+    border-color: var(--admin-blue);
+    box-shadow: 0 0 0 0.2rem rgba(34, 157, 216, 0.15);
+}
+
+/* Search highlight styling */
+.search-highlight {
+    background-color: #fff3cd;
+    padding: 1px 2px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+/* Enhanced table row styling */
+.issue-row {
+    transition: all 0.2s ease;
+}
+
+.issue-row:hover {
+    background-color: rgba(34, 157, 216, 0.05);
+}
+
+.issue-title-text {
+    transition: color 0.2s ease;
+}
+
+.issue-row:hover .issue-title-text {
+    color: var(--admin-blue) !important;
+}
+
+/* Results counter styling */
+#searchResults {
+    font-weight: 500;
+    color: #6c757d;
+}
+
+/* No results message styling */
+#noResults {
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin: 1rem;
+}
+
+/* Enhanced responsive design for search */
+@media (max-width: 768px) {
+    .search-filter-card .card-body .row {
+        row-gap: 1rem;
+    }
+    
+    .search-input,
+    .filter-select {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}
+
+/* Status Badge Styles - Dashboard Visual Elements Only */
+.status-open {
+    background-color: var(--admin-orange) !important;
+    color: white !important;
+    border: none;
+}
+
+.status-in-progress {
+    background-color: var(--admin-red) !important;
+    color: white !important;
+    border: none;
+}
+
+.status-closed {
+    background-color: var(--admin-green) !important;
+    color: white !important;
+    border: none;
+}
+
+/* Priority Badge Styles - Dashboard Visual Elements Only */
+.priority-high {
+    background-color: var(--admin-red) !important;
+    color: white !important;
+    border: none;
+}
+
+.priority-medium {
+    background-color: var(--admin-orange) !important;
+    color: white !important;
+    border: none;
+}
+
+.priority-low {
+    background-color: var(--admin-blue) !important;
+    color: white !important;
+    border: none;
+}
+
+/* Progress Bar Styles - Dashboard Visual Elements Only */
+.progress-bar {
+    transition: width 1s ease-in-out;
+}
+
+.progress-bar.bg-primary,
+.progress-bar.admin-bg-blue {
+    background-color: var(--admin-blue) !important;
+}
+
+.progress-bar.bg-success,
+.progress-bar.admin-bg-green {
+    background-color: var(--admin-green) !important;
+}
+
+.progress-bar.bg-danger,
+.progress-bar.admin-bg-red {
+    background-color: var(--admin-red) !important;
+}
+
+.progress-bar.bg-warning,
+.progress-bar.bg-info,
+.progress-bar.admin-bg-orange {
+    background-color: var(--admin-orange) !important;
+}
+
+/* Table Hover Effects */
+.table tbody tr:hover {
+    background-color: var(--admin-blue-light) !important;
+    transform: scale(1.002);
+    transition: all 0.2s ease;
+}
+
+/* Card Hover Effects */
+.card:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Button Group Hover Effects */
+.btn-group .btn {
+    transition: all 0.2s ease;
+}
+
+.btn-group .btn:hover {
+    transform: scale(1.05);
+}
+
+/* Form Control Focus States */
+.form-control:focus {
+    border-color: var(--admin-blue) !important;
+    box-shadow: 0 0 0 0.2rem rgba(34, 157, 216, 0.25) !important;
+}
+
+.form-select:focus {
+    border-color: var(--admin-blue) !important;
+    box-shadow: 0 0 0 0.2rem rgba(34, 157, 216, 0.25) !important;
+}
+
+/* Icon Colors */
+.admin-icon-blue {
+    color: var(--admin-blue) !important;
+}
+
+.admin-icon-red {
+    color: var(--admin-red) !important;
+}
+
+.admin-icon-green {
+    color: var(--admin-green) !important;
+}
+
+.admin-icon-orange {
+    color: var(--admin-orange) !important;
+}
+
+/* Background Colors - Dashboard Visual Elements */
+.admin-bg-blue {
+    background-color: var(--admin-blue) !important;
+    color: white;
+}
+
+.admin-bg-red {
+    background-color: var(--admin-red) !important;
+    color: white;
+}
+
+.admin-bg-green {
+    background-color: var(--admin-green) !important;
+    color: white;
+}
+
+.admin-bg-orange {
+    background-color: var(--admin-orange) !important;
+    color: white;
+}
+
+.admin-bg-blue-light {
+    background-color: var(--admin-blue-light) !important;
+    color: var(--admin-blue);
+}
+
+.admin-bg-red-light {
+    background-color: var(--admin-red-light) !important;
+    color: var(--admin-red);
+}
+
+.admin-bg-green-light {
+    background-color: var(--admin-green-light) !important;
+    color: var(--admin-green);
+}
+
+.admin-bg-orange-light {
+    background-color: var(--admin-orange-light) !important;
+    color: var(--admin-orange);
+}
+
+/* Text Colors - Dashboard Visual Elements */
+.admin-text-blue {
+    color: var(--admin-blue) !important;
+}
+
+.admin-text-red {
+    color: var(--admin-red) !important;
+}
+
+.admin-text-green {
+    color: var(--admin-green) !important;
+}
+
+.admin-text-orange {
+    color: var(--admin-orange) !important;
+}
+
+/* Alert Styles - Dashboard Visual Elements */
+.alert-success {
+    background-color: var(--admin-green-light) !important;
+    border-color: var(--admin-green) !important;
+    color: var(--admin-green) !important;
+}
+
+.alert-danger {
+    background-color: var(--admin-red-light) !important;
+    border-color: var(--admin-red) !important;
+    color: var(--admin-red) !important;
+}
+
+.alert-warning {
+    background-color: var(--admin-orange-light) !important;
+    border-color: var(--admin-orange) !important;
+    color: var(--admin-orange) !important;
+}
+
+.alert-info {
+    background-color: var(--admin-blue-light) !important;
+    border-color: var(--admin-blue) !important;
+    color: var(--admin-blue) !important;
+}
+
+/* Admin Header Icon Gradients */
+.admin-header-icon {
+    background: linear-gradient(135deg, var(--admin-blue), var(--admin-blue-dark)) !important;
+    color: white !important;
+}
+
+.admin-header-icon.orange {
+    background: linear-gradient(135deg, var(--admin-orange), var(--admin-orange-dark)) !important;
+}
+
+.admin-header-icon.red {
+    background: linear-gradient(135deg, var(--admin-red), var(--admin-red-dark)) !important;
+}
+
+.admin-header-icon.green {
+    background: linear-gradient(135deg, var(--admin-green), var(--admin-green-dark)) !important;
+}
+
+/* Custom Admin Dashboard Responsive Design */
+@media (max-width: 768px) {
+    .stats-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .admin-dashboard-container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}
+
+/* Admin Details Page Specific Styles */
+.admin-controls .btn {
+    min-width: 80px;
+}
+
+.admin-controls .form-select {
+    min-width: 120px;
+}
+
+/* Comments Section Styling */
+.comments-section .card-header {
+    background: var(--admin-blue-light) !important;
+    border-bottom: 1px solid var(--admin-blue);
+}
+
+/* Issue Information Sidebar */
+.issue-info-sidebar .badge {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+/* Quick Actions Buttons - Dashboard Visual Elements */
+.quick-actions .btn {
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+}
+
+/* User Role Badges - Dashboard Visual Elements */
+.badge.role-customer {
+    background-color: var(--admin-blue) !important;
+    color: white !important;
+}
+
+.badge.role-engineer {
+    background-color: var(--admin-green) !important;
+    color: white !important;
+}
+
+.badge.role-admin {
+    background-color: var(--admin-red) !important;
+    color: white !important;
+}
+
+/* Dashboard Text Color Overrides */
+.admin-page .text-primary {
+    color: var(--admin-blue) !important;
+}
+
+.admin-page .text-success {
+    color: var(--admin-green) !important;
+}
+
+.admin-page .text-danger {
+    color: var(--admin-red) !important;
+}
+
+.admin-page .text-warning {
+    color: var(--admin-orange) !important;
+}
+
+/* Dashboard Background Color Overrides */
+.admin-page .bg-primary {
+    background-color: var(--admin-blue) !important;
+}
+
+.admin-page .bg-success {
+    background-color: var(--admin-green) !important;
+}
+
+.admin-page .bg-danger {
+    background-color: var(--admin-red) !important;
+}
+
+.admin-page .bg-warning {
+    background-color: var(--admin-orange) !important;
+}

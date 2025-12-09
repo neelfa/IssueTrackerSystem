@@ -2,119 +2,401 @@
 
 @{
     ViewData["Title"] = "My Assigned Issues";
+    var assignedIssues = Model.ToList();
+    var totalAssigned = assignedIssues.Count;
+    var inProgress = assignedIssues.Count(i => i.Status == "InProgress");
+    var resolved = assignedIssues.Count(i => i.Status == "Resolved" || i.Status == "Closed");
+    var overdue = assignedIssues.Count(i => i.CreatedAt < DateTime.UtcNow.AddDays(-7) && (i.Status == "Open" || i.Status == "InProgress"));
 }
 
-<div class="container py-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold">My Assigned Issues</h2>
-            <p class="text-muted">Issues currently assigned to you</p>
-        </div>
-        <div class="d-flex gap-2">
-            <a asp-action="Index" class="btn btn-outline-primary">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                </svg>
-                All Issues
-            </a>
-        </div>
-    </div>
+<div class="modern-engineer-container">
+    <!-- Enhanced Header with Stats -->
+    <div class="modern-header-section">
+        <div class="container py-4">
+            <div class="row align-items-center mb-4">
+                <div class="col">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="modern-avatar">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="fw-bold mb-1 modern-title">My Assigned Issues</h2>
+                            <p class="text-muted mb-0">Issues currently assigned to you</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex gap-2">
+                        <a asp-action="Index" class="btn btn-outline-primary modern-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            </svg>
+                            All Issues
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-    @if (Model.Any())
-    {
-        <!-- Issues Grid -->
-        <div class="row g-4">
-            @foreach (var issue in Model)
+            <!-- Modern Stats Cards -->
+            @if (assignedIssues.Any())
             {
-                <div class="col-lg-6">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    @{
-                                        var priorityClass = issue.Priority.ToLower() switch
-                                        {
-                                            "high" => "priority-high",
-                                            "medium" => "priority-medium", 
-                                            "low" => "priority-low",
-                                            _ => "priority-medium"
-                                        };
-                                    }
-                                    <span class="badge @priorityClass">@issue.Priority Priority</span>
-                                </div>
-                                <div>
-                                    @{
-                                        var statusClass = issue.Status.ToLower() switch
-                                        {
-                                            "open" => "status-open",
-                                            "inprogress" => "status-in-progress",
-                                            "resolved" => "status-closed",
-                                            "closed" => "status-closed",
-                                            _ => "status-open"
-                                        };
-                                    }
-                                    <span class="badge @statusClass">@issue.Status</span>
-                                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3 col-6">
+                        <div class="modern-stat-card total">
+                            <div class="stat-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14,2 14,8 20,8"></polyline>
+                                </svg>
                             </div>
-
-                            <h5 class="fw-semibold mb-2">@issue.Title</h5>
-                            <p class="text-muted mb-3">
-                                @if (issue.Description.Length > 120)
-                                {
-                                    @(issue.Description.Substring(0, 120) + "...")
-                                }
-                                else
-                                {
-                                    @issue.Description
-                                }
-                            </p>
-
-                            <div class="row text-center mb-3">
-                                <div class="col-6">
-                                    <div class="small text-muted">Created</div>
-                                    <div class="fw-semibold">@issue.CreatedAt.ToString("MMM dd")</div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="small text-muted">Customer</div>
-                                    <div class="fw-semibold">@issue.CreatedByEmail</div>
-                                </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">@totalAssigned</h3>
+                                <p class="stat-label">Total</p>
                             </div>
-
-                            <div class="d-grid">
-                                <a asp-action="Details" asp-route-id="@issue.Id" class="btn btn-outline-primary">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                    View Details
-                                </a>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="modern-stat-card in-progress">
+                            <div class="stat-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12,6 12,12 16,14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">@inProgress</h3>
+                                <p class="stat-label">In Progress</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="modern-stat-card resolved">
+                            <div class="stat-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">@resolved</h3>
+                                <p class="stat-label">Resolved</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="modern-stat-card overdue">
+                            <div class="stat-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">@overdue</h3>
+                                <p class="stat-label">Need Attention</p>
                             </div>
                         </div>
                     </div>
                 </div>
             }
         </div>
-    }
-    else
-    {
-        <!-- Empty State -->
-        <div class="card border-0 shadow-sm">
-            <div class="card-body text-center py-5">
-                <div class="mb-4">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted">
+    </div>
+
+    <div class="container py-2">
+        @if (assignedIssues.Any())
+        {
+            <!-- Search and Filter Section -->
+            <div class="modern-search-section mb-4">
+                <div class="search-container">
+                    <div class="row g-3">
+                        <div class="col-lg-6">
+                            <div class="search-input-group">
+                                <div class="search-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <path d="m21 21-4.35-4.35"></path>
+                                    </svg>
+                                </div>
+                                <input type="text" class="modern-search-input" id="issueSearchBox" placeholder="Search your assigned issues...">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <select class="modern-filter-select" id="statusFilter">
+                                <option value="">All Statuses</option>
+                                <option value="Open">Open</option>
+                                <option value="InProgress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <select class="modern-filter-select" id="priorityFilter">
+                                <option value="">All Priorities</option>
+                                <option value="High">High Priority</option>
+                                <option value="Medium">Medium Priority</option>
+                                <option value="Low">Low Priority</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-results-info mt-2">
+                        <span id="searchResults" class="results-counter">Showing all @totalAssigned assigned issues</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modern Issues Grid -->
+            <div class="modern-issues-grid" id="issuesGrid">
+                @foreach (var issue in assignedIssues.OrderByDescending(i => i.CreatedAt))
+                {
+                    var priorityClass = issue.Priority?.ToLower() switch
+                    {
+                        "high" => "priority-high",
+                        "medium" => "priority-medium", 
+                        "low" => "priority-low",
+                        _ => "priority-medium"
+                    };
+                    
+                    var statusClass = issue.Status?.ToLower() switch
+                    {
+                        "open" => "status-open",
+                        "inprogress" => "status-in-progress",
+                        "resolved" => "status-closed",
+                        "closed" => "status-closed",
+                        _ => "status-open"
+                    };
+
+                    var statusDisplay = issue.Status switch
+                    {
+                        "InProgress" => "In Progress",
+                        _ => issue.Status ?? "Open"
+                    };
+
+                    var isOverdue = issue.CreatedAt < DateTime.UtcNow.AddDays(-7) && (issue.Status == "Open" || issue.Status == "InProgress");
+                    
+                    <div class="modern-issue-card @(isOverdue ? "overdue" : "") issue-card"
+                         data-title="@(issue.Title?.ToLower() ?? "")"
+                         data-description="@(issue.Description?.ToLower() ?? "")"
+                         data-id="@issue.Id"
+                         data-status="@(issue.Status ?? "Open")"
+                         data-priority="@(issue.Priority ?? "Medium")"
+                         data-creator="@(issue.CreatedByEmail?.Split('@')[0]?.ToLower() ?? "")">
+                        <!-- Card Header with Priority Border -->
+                        <div class="card-priority-border @priorityClass"></div>
+                        
+                        <div class="modern-card-header">
+                            <div class="badge-group">
+                                <span class="modern-badge @priorityClass">@(issue.Priority ?? "Medium")</span>
+                                <span class="modern-badge @statusClass">@statusDisplay</span>
+                                @if (isOverdue)
+                                {
+                                    <span class="modern-badge overdue-badge">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12,6 12,12 16,14"></polyline>
+                                        </svg>
+                                        Overdue
+                                    </span>
+                                }
+                            </div>
+                            <div class="issue-id">#@issue.Id</div>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="modern-card-body">
+                            <h5 class="issue-title">@(issue.Title ?? "Untitled Issue")</h5>
+                            
+                            @if (!string.IsNullOrEmpty(issue.Description))
+                            {
+                                <p class="issue-description">
+                                    @(issue.Description.Length > 150 ? issue.Description.Substring(0, 150) + "..." : issue.Description)
+                                </p>
+                            }
+
+                            <!-- Modern Metadata -->
+                            <div class="issue-metadata">
+                                <div class="metadata-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    <span>@issue.CreatedAt.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="metadata-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                    <span>@(issue.CreatedByEmail?.Split('@')[0] ?? "Unknown")</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="modern-card-footer">
+                            <a asp-action="Details" asp-route-id="@issue.Id" class="modern-btn-primary">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- No Results Message -->
+            <div id="noResults" class="modern-no-results" style="display: none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="no-results-icon">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <h6 class="no-results-title">No issues match your search</h6>
+                <p class="no-results-text">Try adjusting your search terms or filters</p>
+            </div>
+        }
+        else
+        {
+            <!-- Modern Empty State -->
+            <div class="modern-empty-state">
+                <div class="empty-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                         <circle cx="9" cy="7" r="4"></circle>
                         <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
                 </div>
-                <h5 class="fw-semibold mb-2">No Assigned Issues</h5>
-                <p class="text-muted mb-4">You don't have any issues assigned to you at the moment.</p>
-                <a asp-action="Index" class="btn btn-primary">
+                <h5 class="empty-title">No Assigned Issues</h5>
+                <p class="empty-description">Great work! You don't have any issues assigned to you at the moment.</p>
+                <a asp-action="Index" class="modern-btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    </svg>
                     View All Issues
                 </a>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
+
+<link href="~/css/engineer-modern.css" rel="stylesheet" />
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get references to filter elements
+    const searchBox = document.getElementById('issueSearchBox');
+    const statusFilter = document.getElementById('statusFilter');
+    const priorityFilter = document.getElementById('priorityFilter');
+    const issueCards = document.querySelectorAll('.issue-card');
+    const noResultsDiv = document.getElementById('noResults');
+    const resultsCounter = document.getElementById('searchResults');
+    const issuesGrid = document.getElementById('issuesGrid');
+
+    // Function to update results counter
+    function updateResultsCounter(visibleCount, totalCount) {
+        if (visibleCount === totalCount) {
+            resultsCounter.textContent = `Showing all ${totalCount} assigned issues`;
+        } else if (visibleCount === 0) {
+            resultsCounter.textContent = 'No issues found';
+        } else {
+            resultsCounter.textContent = `Showing ${visibleCount} of ${totalCount} assigned issues`;
+        }
+    }
+
+    // Function to filter issues
+    function filterIssues() {
+        const searchTerm = searchBox.value.toLowerCase().trim();
+        const selectedStatus = statusFilter.value;
+        const selectedPriority = priorityFilter.value;
+        
+        let visibleCount = 0;
+        const totalCount = issueCards.length;
+
+        issueCards.forEach(card => {
+            const title = card.getAttribute('data-title') || '';
+            const description = card.getAttribute('data-description') || '';
+            const id = card.getAttribute('data-id') || '';
+            const status = card.getAttribute('data-status') || '';
+            const priority = card.getAttribute('data-priority') || '';
+            const creator = card.getAttribute('data-creator') || '';
+
+            // Check search term (title, description, ID, or creator)
+            const matchesSearch = searchTerm === '' ||
+                title.includes(searchTerm) ||
+                description.includes(searchTerm) ||
+                id.includes(searchTerm) ||
+                creator.includes(searchTerm) ||
+                `#${id}`.includes(searchTerm);
+
+            // Check status filter
+            const matchesStatus = selectedStatus === '' || status === selectedStatus;
+
+            // Check priority filter
+            const matchesPriority = selectedPriority === '' || priority === selectedPriority;
+
+            // Show/hide card based on all filters
+            if (matchesSearch && matchesStatus && matchesPriority) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Update results counter
+        updateResultsCounter(visibleCount, totalCount);
+
+        // Show/hide no results message
+        if (visibleCount === 0 && (searchTerm !== '' || selectedStatus !== '' || selectedPriority !== '')) {
+            noResultsDiv.style.display = 'flex';
+            if (issuesGrid) {
+                issuesGrid.style.display = 'none';
+            }
+        } else {
+            noResultsDiv.style.display = 'none';
+            if (issuesGrid) {
+                issuesGrid.style.display = '';
+            }
+        }
+    }
+
+    // Clear all filters function
+    function clearFilters() {
+        searchBox.value = '';
+        statusFilter.value = '';
+        priorityFilter.value = '';
+        filterIssues();
+    }
+
+    // Add event listeners with debouncing for search input
+    let searchTimeout;
+    if (searchBox) {
+        searchBox.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(filterIssues, 300); // 300ms delay
+        });
+    }
+    
+    if (statusFilter) statusFilter.addEventListener('change', filterIssues);
+    if (priorityFilter) priorityFilter.addEventListener('change', filterIssues);
+
+    // Add clear button functionality (optional enhancement)
+    if (searchBox) {
+        searchBox.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                clearFilters();
+            }
+        });
+    }
+
+    // Initialize counter
+    updateResultsCounter(issueCards.length, issueCards.length);
+});
+</script>

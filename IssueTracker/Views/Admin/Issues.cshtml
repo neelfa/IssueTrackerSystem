@@ -4,30 +4,254 @@
     ViewData["Title"] = "All Issues";
 }
 
-<div class="container py-4">
-    <h1 class="mb-3">All Issues</h1>
+<div class="container-fluid py-4 admin-dashboard-container admin-page">
+    <div class="container">
+        <!-- Header Section -->
+        <div class="row align-items-center mb-4">
+            <div class="col">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle admin-header-icon"
+                         style="width:48px;height:48px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14,2 14,8 20,8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="mb-0 fw-bold admin-text-blue">All Issues</h1>
+                        <p class="text-muted mb-0">Manage and monitor all support tickets in the system</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="d-flex gap-2">
+                    <a asp-action="Dashboard" class="btn btn-outline-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a asp-action="ExportReport" class="btn btn-outline-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7,10 12,15 17,10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Export
+                    </a>
+                </div>
+            </div>
+        </div>
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Created</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var issue in Model)
-            {
-                <tr>
-                    <td>@issue.Id</td>
-                    <td>@issue.Title</td>
-                    <td>@issue.Priority</td>
-                    <td>@issue.Status</td>
-                    <td>@issue.CreatedAt.ToLocalTime()</td>
-                </tr>
+        <!-- Issue Statistics Cards -->
+        <div class="row g-4 mb-5">
+            @{
+                var totalIssues = Model.Count();
+                var openIssues = Model.Count(i => i.Status == "Open");
+                var inProgressIssues = Model.Count(i => i.Status == "InProgress");
+                var closedIssues = Model.Count(i => i.Status == "Resolved" || i.Status == "Closed");
             }
-        </tbody>
-    </table>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card primary">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Issues</h6>
+                            <h2 class="fw-bold mb-0 admin-text-blue">@totalIssues</h2>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center rounded-circle admin-bg-blue-light"
+                             style="width:48px;height:48px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-icon-blue">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10,9 9,9 8,9"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="progress" style="height:4px;">
+                        <div class="progress-bar admin-bg-blue" style="width:100%"></div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">All time issues logged</small>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card info">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted mb-1">Open</h6>
+                            <h2 class="fw-bold mb-0 admin-text-orange">@openIssues</h2>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center rounded-circle admin-bg-orange-light"
+                             style="width:48px;height:48px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-icon-orange">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12,6 12,12 16,14"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="progress" style="height:4px;">
+                        <div class="progress-bar admin-bg-orange" style="width:@((double)openIssues / Math.Max(totalIssues, 1) * 100)%"></div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">Awaiting attention</small>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card warning">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted mb-1">In Progress</h6>
+                            <h2 class="fw-bold mb-0 admin-text-red">@inProgressIssues</h2>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center rounded-circle admin-bg-red-light"
+                             style="width:48px;height:48px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-icon-red">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="progress" style="height:4px;">
+                        <div class="progress-bar admin-bg-red" style="width:@((double)inProgressIssues / Math.Max(totalIssues, 1) * 100)%"></div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">Being worked on</small>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card success">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted mb-1">Resolved</h6>
+                            <h2 class="fw-bold mb-0 admin-text-green">@closedIssues</h2>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center rounded-circle admin-bg-green-light"
+                             style="width:48px;height:48px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-icon-green">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="progress" style="height:4px;">
+                        <div class="progress-bar admin-bg-green" style="width:@((double)closedIssues / Math.Max(totalIssues, 1) * 100)%"></div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">Successfully completed</small>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Any())
+        {
+            <!-- Issues Table -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h5 class="fw-semibold mb-1 admin-text-blue">All Issues (@totalIssues)</h5>
+                            <p class="text-muted small mb-0">Complete list of support tickets</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="border-0 ps-4">Issue</th>
+                                    <th class="border-0">Priority</th>
+                                    <th class="border-0">Status</th>
+                                    <th class="border-0">Created By</th>
+                                    <th class="border-0">Created</th>
+                                    <th class="border-0 pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var issue in Model)
+                                {
+                                    // Determine CSS class for status badge
+                                    var statusClass = issue.Status?.ToLower() switch
+                                    {
+                                        "open" => "status-open",
+                                        "inprogress" => "status-in-progress",
+                                        "resolved" => "status-closed",
+                                        "closed" => "status-closed",
+                                        _ => "status-open"
+                                    };
+                                    
+                                    // Determine display text for status
+                                    var statusDisplay = issue.Status switch
+                                    {
+                                        "InProgress" => "In Progress",
+                                        _ => issue.Status ?? "Open"
+                                    };
+                                    
+                                    // Determine CSS class for priority badge
+                                    var priorityClass = issue.Priority?.ToLower() switch
+                                    {
+                                        "high" => "priority-high",
+                                        "medium" => "priority-medium",
+                                        "low" => "priority-low",
+                                        _ => "priority-medium"
+                                    };
+                                    
+                                    <tr>
+                                        <td class="ps-4 py-3">
+                                            <div class="fw-medium text-dark">@(issue.Title ?? "Untitled Issue")</div>
+                                            <small class="text-muted">ID: #@issue.Id</small>
+                                        </td>
+                                        <td class="py-3">
+                                            <span class="badge @priorityClass">@(issue.Priority ?? "Medium")</span>
+                                        </td>
+                                        <td class="py-3">
+                                            <span class="badge @statusClass">@statusDisplay</span>
+                                        </td>
+                                        <td class="py-3">
+                                            <div class="text-muted">@(issue.CreatedByEmail ?? "Unknown")</div>
+                                        </td>
+                                        <td class="py-3">
+                                            <div class="text-muted">@issue.CreatedAt.ToString("MMM dd, yyyy")</div>
+                                            <small class="text-muted">@issue.CreatedAt.ToString("HH:mm")</small>
+                                        </td>
+                                        <td class="py-3 pe-4">
+                                            <div class="btn-group btn-group-sm">
+                                                <a asp-action="IssueDetails" asp-route-id="@issue.Id" class="btn btn-outline-secondary" title="View Details">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                        <circle cx="12" cy="12" r="3"></circle>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Empty State -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <div class="mb-4">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14,2 14,8 20,8"></polyline>
+                        </svg>
+                    </div>
+                    <h5 class="fw-semibold mb-2 admin-text-blue">No Issues Found</h5>
+                    <p class="text-muted">There are currently no issues in the system.</p>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+
+<link href="~/css/admin-dashboard.css" rel="stylesheet" />

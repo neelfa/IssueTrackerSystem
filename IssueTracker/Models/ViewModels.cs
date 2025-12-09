@@ -21,4 +21,19 @@ namespace IssueTracker.Models
     {
         public List<User> Users { get; set; } = new();
     }
+
+    public class EngineerDashboardViewModel
+    {
+        public int TotalIssues { get; set; }
+        public int MyAssignedIssues { get; set; }
+        public int UnassignedIssues { get; set; }
+        public int InProgressIssues { get; set; }
+        public int ResolvedIssues { get; set; }
+        public int OverdueIssues { get; set; }
+        public int HighPriorityCount { get; set; }
+        public int MediumPriorityCount { get; set; }
+        public int LowPriorityCount { get; set; }
+        public List<Issue> RecentAssignedIssues { get; set; } = new();
+        public List<Issue> RecentUnassignedIssues { get; set; } = new();
+    }
 }

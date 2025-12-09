@@ -4,214 +4,328 @@
     ViewData["Title"] = "User Management";
 }
 
-<div class="container py-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold">User Management</h2>
-            <p class="text-muted">Manage user accounts and roles</p>
+<div class="container-fluid py-4" style="background:#f8fafc;">
+<div class="container-fluid py-4 admin-dashboard-container admin-page">
+    <div class="container">
+        <!-- Header Section -->
+        <div class="row align-items-center mb-4">
+            <div class="col">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle admin-header-icon"
+                         style="width:48px;height:48px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="mb-0 fw-bold admin-text-blue">User Management</h1>
+                        <p class="text-muted mb-0">Manage user accounts and roles</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="d-flex gap-2">
+                    <a asp-action="Dashboard" class="btn btn-outline-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a asp-action="Issues" class="btn btn-outline-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14,2 14,8 20,8"></polyline>
+                        </svg>
+                        All Issues
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="d-flex gap-2">
-            <a asp-action="Dashboard" class="btn btn-outline-primary">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+
+        <!-- Success/Error Messages -->
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success border-0 rounded-3 d-flex align-items-center gap-2 mb-4">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22,4 12,14.01 9,11.01"></polyline>
                 </svg>
-                Dashboard
-            </a>
-            <a asp-action="Issues" class="btn btn-outline-secondary">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14,2 14,8 20,8"></polyline>
+                <span>@TempData["Success"]</span>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger border-0 rounded-3 d-flex align-items-center gap-2 mb-4">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
                 </svg>
-                All Issues
-            </a>
-        </div>
-    </div>
+                <span>@TempData["Error"]</span>
+            </div>
+        }
 
-    <!-- Success/Error Messages -->
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success border-0 rounded-3 d-flex align-items-center gap-2 mb-4">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22,4 12,14.01 9,11.01"></polyline>
-            </svg>
-            <span>@TempData["Success"]</span>
-        </div>
-    }
-
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger border-0 rounded-3 d-flex align-items-center gap-2 mb-4">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="15" y1="9" x2="9" y2="15"></line>
-                <line x1="9" y1="9" x2="15" y2="15"></line>
-            </svg>
-            <span>@TempData["Error"]</span>
-        </div>
-    }
-
-    @if (Model.Users.Any())
-    {
-        <!-- User Statistics -->
-        <div class="row g-3 mb-4">
-            @{
-                var customerCount = Model.Users.Count(u => u.Role == "Customer");
-                var engineerCount = Model.Users.Count(u => u.Role == "Engineer");
-                var adminCount = Model.Users.Count(u => u.Role == "Admin");
-            }
-            
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-                             style="width:48px;height:48px;background:var(--primary-color);color:white;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                            </svg>
+        @if (Model.Users.Any())
+        {
+            <!-- User Statistics Cards -->
+            <div class="row g-4 mb-5">
+                @{
+                    var customerCount = Model.Users.Count(u => u.Role == "Customer");
+                    var engineerCount = Model.Users.Count(u => u.Role == "Engineer");
+                    var adminCount = Model.Users.Count(u => u.Role == "Admin");
+                    var totalUsers = Model.Users.Count();
+                }
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card primary">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <h6 class="text-muted mb-1">Total Users</h6>
+                                <h2 class="fw-bold mb-0 admin-text-blue">@totalUsers</h2>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center rounded-circle admin-bg-blue-light"
+                                 style="width:48px;height:48px;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-icon-blue">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <h3 class="fw-bold text-primary">@customerCount</h3>
-                        <p class="text-muted mb-0">Customers</p>
+                        <div class="progress" style="height:4px;">
+                            <div class="progress-bar admin-bg-blue" style="width:100%"></div>
+                        </div>
+                        <small class="text-muted mt-2 d-block">All registered users</small>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card info">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <h6 class="text-muted mb-1">Customers</h6>
+                                <h2 class="fw-bold mb-0 admin-text-blue">@customerCount</h2>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center rounded-circle admin-bg-blue-light"
+                                 style="width:48px;height:48px;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-icon-blue">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="progress" style="height:4px;">
+                            <div class="progress-bar admin-bg-blue" style="width:@((double)customerCount / Math.Max(totalUsers, 1) * 100)%"></div>
+                        </div>
+                        <small class="text-muted mt-2 d-block">Regular users</small>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card success">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <h6 class="text-muted mb-1">Engineers</h6>
+                                <h2 class="fw-bold mb-0 admin-text-green">@engineerCount</h2>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center rounded-circle admin-bg-green-light"
+                                 style="width:48px;height:48px;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-icon-green">
+                                    <path d="M9 12l2 2 4-4"></path>
+                                    <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1h9l4 4V12z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="progress" style="height:4px;">
+                            <div class="progress-bar admin-bg-green" style="width:@((double)engineerCount / Math.Max(totalUsers, 1) * 100)%"></div>
+                        </div>
+                        <small class="text-muted mt-2 d-block">Support staff</small>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card warning">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <h6 class="text-muted mb-1">Admins</h6>
+                                <h2 class="fw-bold mb-0 admin-text-red">@adminCount</h2>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center rounded-circle admin-bg-red-light"
+                                 style="width:48px;height:48px;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-icon-red">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="progress" style="height:4px;">
+                            <div class="progress-bar admin-bg-red" style="width:@((double)adminCount / Math.Max(totalUsers, 1) * 100)%"></div>
+                        </div>
+                        <small class="text-muted mt-2 d-block">System administrators</small>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-                             style="width:48px;height:48px;background:var(--success-color);color:white;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 12l2 2 4-4"></path>
-                                <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1h9l4 4V12z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="fw-bold text-success">@engineerCount</h3>
-                        <p class="text-muted mb-0">Engineers</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-                             style="width:48px;height:48px;background:var(--danger-color);color:white;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="fw-bold text-danger">@adminCount</h3>
-                        <p class="text-muted mb-0">Admins</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Users Table -->
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-light">
-                <h5 class="mb-0">All Users (@Model.Users.Count)</h5>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="bg-light">
-                            <tr>
-                                <th class="border-0 ps-4 fw-semibold">User</th>
-                                <th class="border-0 fw-semibold">Current Role</th>
-                                <th class="border-0 fw-semibold">Change Role</th>
-                                <th class="border-0 pe-4 fw-semibold">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var user in Model.Users)
-                            {
+            <!-- Users Table -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h5 class="fw-semibold mb-1 admin-text-blue">All Users (@Model.Users.Count)</h5>
+                            <p class="text-muted small mb-0">Manage user accounts and permissions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
                                 <tr>
-                                    <td class="ps-4 py-3">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle"
-                                                 style="width:32px;height:32px;background:var(--primary-light);color:var(--primary-color);">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                    <circle cx="12" cy="7" r="4"></circle>
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <div class="fw-semibold">@user.Email</div>
-                                                <div class="small text-muted">ID: @user.Id</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="py-3">
-                                        @{
-                                            var roleClass = user.Role.ToLower() switch
-                                            {
-                                                "customer" => "bg-primary",
-                                                "engineer" => "bg-success",
-                                                "admin" => "bg-danger",
-                                                _ => "bg-secondary"
-                                            };
-                                        }
-                                        <span class="badge @roleClass">@user.Role</span>
-                                    </td>
-                                    <td class="py-3">
-                                        <form asp-action="ChangeRole" method="post" class="d-flex gap-2 align-items-center">
-                                            <input type="hidden" name="id" value="@user.Id" />
-                                            <select name="role" class="form-select form-select-sm" style="width:150px;">
-                                                <option value="Customer" selected="@(user.Role == "Customer")">Customer</option>
-                                                <option value="Engineer" selected="@(user.Role == "Engineer")">Engineer</option>
-                                                <option value="Admin" selected="@(user.Role == "Admin")">Admin</option>
-                                            </select>
-                                            <button type="submit" class="btn btn-primary btn-sm">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
-                                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                                </svg>
-                                                Save
-                                            </button>
-                                        </form>
-                                    </td>
-                                    <td class="py-3 pe-4">
-                                        <form asp-action="DeleteUser" method="post" style="display: inline;"
-                                              onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.')">
-                                            <input type="hidden" name="id" value="@user.Id" />
-                                            <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <polyline points="3,6 5,6 21,6"></polyline>
-                                                    <path d="M19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1 2-2h4a2,2 0 0,1 2,2v2"></path>
-                                                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                                                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                                                </svg>
-                                                Delete
-                                            </button>
-                                        </form>
-                                    </td>
+                                    <th class="border-0 ps-4">User</th>
+                                    <th class="border-0">Current Role</th>
+                                    <th class="border-0">Change Role</th>
+                                    <th class="border-0 pe-4">Actions</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model.Users)
+                                {
+                                    <tr>
+                                        <td class="ps-4 py-3">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="d-inline-flex align-items-center justify-content-center rounded-circle admin-bg-blue-light"
+                                                     style="width:32px;height:32px;">
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-icon-blue">
+                                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                        <circle cx="12" cy="7" r="4"></circle>
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-semibold">@user.Email</div>
+                                                    <div class="small text-muted">ID: @user.Id</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="py-3">
+                                            @{
+                                                var roleClass = user.Role.ToLower() switch
+                                                {
+                                                    "customer" => "role-customer",
+                                                    "engineer" => "role-engineer",
+                                                    "admin" => "role-admin",
+                                                    _ => "bg-secondary"
+                                                };
+                                            }
+                                            <span class="badge @roleClass">@user.Role</span>
+                                        </td>
+                                        <td class="py-3">
+                                            <form asp-action="ChangeRole" method="post" class="d-flex gap-2 align-items-center">
+                                                <input type="hidden" name="id" value="@user.Id" />
+                                                <select name="role" class="form-select form-select-sm" style="width:150px;">
+                                                    <option value="Customer" selected="@(user.Role == "Customer")">Customer</option>
+                                                    <option value="Engineer" selected="@(user.Role == "Engineer")">Engineer</option>
+                                                    <option value="Admin" selected="@(user.Role == "Admin")">Admin</option>
+                                                </select>
+                                                <button type="submit" class="btn btn-primary btn-sm">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                                    </svg>
+                                                    Save
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td class="py-3 pe-4">
+                                            <form asp-action="DeleteUser" method="post" style="display: inline;"
+                                                  onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.')">
+                                                <input type="hidden" name="id" value="@user.Id" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete User">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <polyline points="3,6 5,6 21,6"></polyline>
+                                                        <path d="M19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1 2-2h4a2,2 0 0,1 2,2v2"></path>
+                                                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
-    else
-    {
-        <!-- Empty State -->
-        <div class="card border-0 shadow-sm">
-            <div class="card-body text-center py-5">
-                <div class="mb-4">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
+        }
+        else
+        {
+            <!-- Empty State -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <div class="mb-4">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h5 class="fw-semibold mb-2 admin-text-blue">No Users Found</h5>
+                    <p class="text-muted">There are currently no users in the system.</p>
                 </div>
-                <h5 class="fw-semibold mb-2">No Users Found</h5>
-                <p class="text-muted">There are currently no users in the system.</p>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
+
+<style>
+    /* Stats Card Styling */
+    .stats-card {
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        background: white;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+    .stats-card:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .progress-bar {
+        transition: width 1s ease-in-out;
+    }
+
+    .card:hover {
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+    .btn-group .btn {
+        transition: all 0.2s ease;
+    }
+
+    .btn-group .btn:hover {
+        transform: scale(1.05);
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(0, 102, 204, 0.1);
+        transition: all 0.2s ease;
+    }
+
+    /* Custom CSS Variables */
+    :root {
+        --gradient-primary: linear-gradient(135deg, #007bff, #0056b3);
+        --primary-light: rgba(0, 123, 255, 0.1);
+        --primary-color: #007bff;
+        --info-color: #17a2b8;
+        --warning-color: #ffc107;
+        --success-color: #28a745;
+        --danger-color: #dc3545;
+        --shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+</style>
+<link href="~/css/admin-dashboard.css" rel="stylesheet" />

@@ -3,6 +3,7 @@ using IssueTracker.Models;
 using IssueTracker.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace IssueTracker.Controllers
 {
@@ -44,6 +45,40 @@ namespace IssueTracker.Controllers
             return View(model);
         }
 
+        // GET: /Admin/ExportReport
+        public async Task<IActionResult> ExportReport()
+        {
+            var authResult = RequireRole("Admin");
+            if (authResult is not EmptyResult) return authResult;
+
+            try
+            {
+                var issues = await _context.Issues
+                    .OrderByDescending(i => i.CreatedAt)
+                    .ToListAsync();
+
+                var csv = new StringBuilder();
+                csv.AppendLine("ID,Title,Status,Priority,Created By,Created Date,Updated Date");
+
+                foreach (var issue in issues)
+                {
+                    csv.AppendLine($"{issue.Id},{issue.Title?.Replace(",", ";")}," +
+                                  $"{issue.Status},{issue.Priority},{issue.CreatedByEmail}," +
+                                  $"{issue.CreatedAt:yyyy-MM-dd},{issue.UpdatedAt?.ToString("yyyy-MM-dd") ?? ""}");
+                }
+
+                var bytes = Encoding.UTF8.GetBytes(csv.ToString());
+                var fileName = $"IssueTracker_Report_{DateTime.Now:yyyyMMdd}.csv";
+
+                return File(bytes, "text/csv", fileName);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Failed to export report: {ex.Message}";
+                return RedirectToAction(nameof(Dashboard));
+            }
+        }
+
         // GET: /Admin/Issues (Admin can see all issues)
         public async Task<IActionResult> Issues()
         {
@@ -80,7 +115,7 @@ namespace IssueTracker.Controllers
                 Engineers = engineers
             };
 
-            return View("Details", viewModel); // Use same view as Engineer
+            return View("Details", viewModel); // Now uses Admin/Details.cshtml
         }
 
         // GET: /Admin/Users (User Management)

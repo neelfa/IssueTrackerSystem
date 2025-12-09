@@ -2,103 +2,267 @@
 
 @{
     ViewData["Title"] = "All Issues - Engineer Dashboard";
+    var allIssues = Model.ToList();
+    var unassignedIssues = allIssues.Where(i => string.IsNullOrEmpty(i.AssignedToEmail)).ToList();
+    var totalIssues = allIssues.Count;
+    var openIssues = allIssues.Count(i => i.Status == "Open");
+    var inProgressIssues = allIssues.Count(i => i.Status == "InProgress");
+    var resolvedIssues = allIssues.Count(i => i.Status == "Resolved" || i.Status == "Closed");
 }
 
-<div class="container py-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold">All Issues</h2>
-            <p class="text-muted">Manage and respond to all support issues</p>
-        </div>
-        <div class="d-flex gap-2">
-            <a asp-action="Assigned" class="btn btn-outline-primary">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                </svg>
-                My Assigned Issues
-            </a>
+<div class="modern-engineer-container">
+    <!-- Enhanced Header with Stats -->
+    <div class="modern-header-section">
+        <div class="container py-4">
+            <div class="row align-items-center mb-4">
+                <div class="col">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="modern-avatar">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="fw-bold mb-1 modern-title">All Issues</h2>
+                            <p class="text-muted mb-0">Manage and respond to all support issues</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex gap-2">
+                        <a asp-action="Assigned" class="btn btn-primary modern-btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 12px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                            </svg>
+                            My Assigned Issues
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modern Stats Cards -->
+            @if (allIssues.Any())
+            {
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3 col-6">
+                        <div class="modern-stat-card total">
+                            <div class="stat-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14,2 14,8 20,8"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">@totalIssues</h3>
+                                <p class="stat-label">Total Issues</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="modern-stat-card available">
+                            <div class="stat-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">@unassignedIssues.Count</h3>
+                                <p class="stat-label">Available</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="modern-stat-card in-progress">
+                            <div class="stat-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12,6 12,12 16,14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">@inProgressIssues</h3>
+                                <p class="stat-label">In Progress</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="modern-stat-card resolved">
+                            <div class="stat-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">@resolvedIssues</h3>
+                                <p class="stat-label">Resolved</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 
-    @if (Model.Any())
-    {
-        <!-- Issues Table -->
-        <div class="card border-0 shadow-sm">
-            <div class="card-body p-0">
+    <div class="container py-2">
+        @if (allIssues.Any())
+        {
+            <!-- Search and Filter Section -->
+            <div class="modern-search-section mb-4">
+                <div class="search-container">
+                    <div class="row g-3">
+                        <div class="col-lg-6">
+                            <div class="search-input-group">
+                                <div class="search-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <path d="m21 21-4.35-4.35"></path>
+                                    </svg>
+                                </div>
+                                <input type="text" class="modern-search-input" id="issueSearchBox" placeholder="Search by title, description, or issue ID...">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <select class="modern-filter-select" id="statusFilter">
+                                <option value="">All Statuses</option>
+                                <option value="Open">Open</option>
+                                <option value="InProgress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <select class="modern-filter-select" id="priorityFilter">
+                                <option value="">All Priorities</option>
+                                <option value="High">High Priority</option>
+                                <option value="Medium">Medium Priority</option>
+                                <option value="Low">Low Priority</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-results-info mt-2">
+                        <span id="searchResults" class="results-counter">Showing all @totalIssues issues</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modern Issues Table -->
+            <div class="modern-table-container">
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="bg-light">
+                    <table class="modern-table">
+                        <thead>
                             <tr>
-                                <th class="border-0 ps-4 fw-semibold">Issue Details</th>
-                                <th class="border-0 fw-semibold">Priority</th>
-                                <th class="border-0 fw-semibold">Status</th>
-                                <th class="border-0 fw-semibold">Assigned To</th>
-                                <th class="border-0 fw-semibold">Created</th>
-                                <th class="border-0 pe-4 fw-semibold">Actions</th>
+                                <th class="ps-4">Issue Details</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Assigned To</th>
+                                <th>Created</th>
+                                <th class="pe-4">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach (var issue in Model)
+                        <tbody id="issuesTableBody">
+                            @foreach (var issue in allIssues.OrderByDescending(i => i.CreatedAt))
                             {
-                                <tr>
+                                var priorityClass = issue.Priority?.ToLower() switch
+                                {
+                                    "high" => "priority-high",
+                                    "medium" => "priority-medium", 
+                                    "low" => "priority-low",
+                                    _ => "priority-medium"
+                                };
+                                
+                                var statusClass = issue.Status?.ToLower() switch
+                                {
+                                    "open" => "status-open",
+                                    "inprogress" => "status-in-progress",
+                                    "resolved" => "status-closed",
+                                    "closed" => "status-closed",
+                                    _ => "status-open"
+                                };
+
+                                var statusDisplay = issue.Status switch
+                                {
+                                    "InProgress" => "In Progress",
+                                    _ => issue.Status ?? "Open"
+                                };
+
+                                var isUnassigned = string.IsNullOrEmpty(issue.AssignedToEmail);
+                                
+                                <tr class="modern-table-row issue-row"
+                                    data-title="@(issue.Title?.ToLower() ?? "")"
+                                    data-description="@(issue.Description?.ToLower() ?? "")"
+                                    data-id="@issue.Id"
+                                    data-status="@(issue.Status ?? "Open")"
+                                    data-priority="@(issue.Priority ?? "Medium")"
+                                    data-assigned="@(!isUnassigned)">
                                     <td class="ps-4 py-3">
-                                        <div>
-                                            <h6 class="fw-semibold mb-1">@issue.Title</h6>
-                                            <p class="text-muted small mb-1">Issue #@issue.Id</p>
-                                            <p class="text-muted small mb-0">Created by: @issue.CreatedByEmail</p>
+                                        <div class="issue-details">
+                                            <h6 class="issue-title-table">@(issue.Title ?? "Untitled Issue")</h6>
+                                            <div class="issue-meta">
+                                                <span class="issue-id">Issue #@issue.Id</span>
+                                                <span class="issue-separator">•</span>
+                                                <span class="issue-creator">by @(issue.CreatedByEmail?.Split('@')[0] ?? "Unknown")</span>
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="py-3">
-                                        @{
-                                            var priorityClass = issue.Priority.ToLower() switch
-                                            {
-                                                "high" => "priority-high",
-                                                "medium" => "priority-medium", 
-                                                "low" => "priority-low",
-                                                _ => "priority-medium"
-                                            };
-                                        }
-                                        <span class="badge @priorityClass">@issue.Priority</span>
+                                        <span class="modern-badge-small @priorityClass">@(issue.Priority ?? "Medium")</span>
                                     </td>
                                     <td class="py-3">
-                                        @{
-                                            var statusClass = issue.Status.ToLower() switch
-                                            {
-                                                "open" => "status-open",
-                                                "inprogress" => "status-in-progress",
-                                                "resolved" => "status-closed",
-                                                "closed" => "status-closed",
-                                                _ => "status-open"
-                                            };
-                                        }
-                                        <span class="badge @statusClass">@issue.Status</span>
+                                        <span class="modern-badge-small @statusClass">@statusDisplay</span>
                                     </td>
                                     <td class="py-3">
-                                        @if (string.IsNullOrEmpty(issue.AssignedToEmail))
+                                        @if (isUnassigned)
                                         {
-                                            <span class="text-muted">Unassigned</span>
+                                            <span class="unassigned-indicator">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                                </svg>
+                                                Unassigned
+                                            </span>
                                         }
                                         else
                                         {
-                                            <span>@issue.AssignedToEmail</span>
+                                            <span class="assigned-to">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                                    <circle cx="9" cy="7" r="4"></circle>
+                                                </svg>
+                                                @issue.AssignedToEmail?.Split('@')[0]
+                                            </span>
                                         }
                                     </td>
                                     <td class="py-3">
-                                        <div>@issue.CreatedAt.ToString("MMM dd, yyyy")</div>
-                                        <small class="text-muted">@issue.CreatedAt.ToString("HH:mm")</small>
+                                        <div class="date-info">
+                                            <div class="date-primary">@issue.CreatedAt.ToString("MMM dd, yyyy")</div>
+                                            <div class="date-secondary">@issue.CreatedAt.ToString("HH:mm")</div>
+                                        </div>
                                     </td>
                                     <td class="py-3 pe-4">
-                                        <div class="d-flex gap-1">
-                                            <a asp-action="Details" asp-route-id="@issue.Id" class="btn btn-outline-primary btn-sm">
+                                        <div class="action-buttons">
+                                            <a asp-action="Details" asp-route-id="@issue.Id" class="modern-btn-table view">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                </svg>
                                                 View
                                             </a>
-                                            @if (string.IsNullOrEmpty(issue.AssignedToEmail))
+                                            @if (isUnassigned)
                                             {
                                                 <form asp-action="Take" method="post" style="display: inline;">
                                                     <input type="hidden" name="id" value="@issue.Id" />
-                                                    <button type="submit" class="btn btn-success btn-sm">Take</button>
+                                                    <button type="submit" class="modern-btn-table take">
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                                        </svg>
+                                                        Take
+                                                    </button>
                                                 </form>
                                             }
                                         </div>
@@ -108,25 +272,145 @@
                         </tbody>
                     </table>
                 </div>
+                <!-- No Results Message -->
+                <div id="noResults" class="modern-no-results" style="display: none;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="no-results-icon">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <h6 class="no-results-title">No issues match your search</h6>
+                    <p class="no-results-text">Try adjusting your search terms or filters</p>
+                </div>
             </div>
-        </div>
-    }
-    else
-    {
-        <!-- Empty State -->
-        <div class="card border-0 shadow-sm">
-            <div class="card-body text-center py-5">
-                <div class="mb-4">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted">
+        }
+        else
+        {
+            <!-- Modern Empty State -->
+            <div class="modern-empty-state">
+                <div class="empty-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14,2 14,8 20,8"></polyline>
                         <line x1="16" y1="13" x2="8" y2="13"></line>
                         <line x1="16" y1="17" x2="8" y2="17"></line>
                     </svg>
                 </div>
-                <h5 class="fw-semibold mb-2">No Issues Found</h5>
-                <p class="text-muted">There are currently no issues in the system.</p>
+                <h5 class="empty-title">No Issues Found</h5>
+                <p class="empty-description">There are currently no issues in the system. Check back later as new support requests come in.</p>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
+
+<link href="~/css/engineer-modern.css" rel="stylesheet" />
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get references to filter elements
+    const searchBox = document.getElementById('issueSearchBox');
+    const statusFilter = document.getElementById('statusFilter');
+    const priorityFilter = document.getElementById('priorityFilter');
+    const issueRows = document.querySelectorAll('.issue-row');
+    const noResultsDiv = document.getElementById('noResults');
+    const resultsCounter = document.getElementById('searchResults');
+    const tableBody = document.getElementById('issuesTableBody');
+
+    // Function to update results counter
+    function updateResultsCounter(visibleCount, totalCount) {
+        if (visibleCount === totalCount) {
+            resultsCounter.textContent = `Showing all ${totalCount} issues`;
+        } else if (visibleCount === 0) {
+            resultsCounter.textContent = 'No issues found';
+        } else {
+            resultsCounter.textContent = `Showing ${visibleCount} of ${totalCount} issues`;
+        }
+    }
+
+    // Function to filter issues
+    function filterIssues() {
+        const searchTerm = searchBox.value.toLowerCase().trim();
+        const selectedStatus = statusFilter.value;
+        const selectedPriority = priorityFilter.value;
+        
+        let visibleCount = 0;
+        const totalCount = issueRows.length;
+
+        issueRows.forEach(row => {
+            const title = row.getAttribute('data-title') || '';
+            const description = row.getAttribute('data-description') || '';
+            const id = row.getAttribute('data-id') || '';
+            const status = row.getAttribute('data-status') || '';
+            const priority = row.getAttribute('data-priority') || '';
+
+            // Check search term (title, description, or ID)
+            const matchesSearch = searchTerm === '' ||
+                title.includes(searchTerm) ||
+                description.includes(searchTerm) ||
+                id.includes(searchTerm) ||
+                `#${id}`.includes(searchTerm);
+
+            // Check status filter
+            const matchesStatus = selectedStatus === '' || status === selectedStatus;
+
+            // Check priority filter
+            const matchesPriority = selectedPriority === '' || priority === selectedPriority;
+
+            // Show/hide row based on all filters
+            if (matchesSearch && matchesStatus && matchesPriority) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Update results counter
+        updateResultsCounter(visibleCount, totalCount);
+
+        // Show/hide no results message
+        if (visibleCount === 0 && (searchTerm !== '' || selectedStatus !== '' || selectedPriority !== '')) {
+            noResultsDiv.style.display = 'flex';
+            if (tableBody) {
+                tableBody.style.display = 'none';
+            }
+        } else {
+            noResultsDiv.style.display = 'none';
+            if (tableBody) {
+                tableBody.style.display = '';
+            }
+        }
+    }
+
+    // Clear all filters function
+    function clearFilters() {
+        searchBox.value = '';
+        statusFilter.value = '';
+        priorityFilter.value = '';
+        filterIssues();
+    }
+
+    // Add event listeners with debouncing for search input
+    let searchTimeout;
+    if (searchBox) {
+        searchBox.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(filterIssues, 300); // 300ms delay
+        });
+    }
+    
+    if (statusFilter) statusFilter.addEventListener('change', filterIssues);
+    if (priorityFilter) priorityFilter.addEventListener('change', filterIssues);
+
+    // Add clear button functionality (optional enhancement)
+    if (searchBox) {
+        searchBox.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                clearFilters();
+            }
+        });
+    }
+
+    // Initialize counter
+    updateResultsCounter(issueRows.length, issueRows.length);
+});
+</script>

@@ -1,0 +1,431 @@
+@model IssueTracker.Models.EngineerDashboardViewModel
+
+@{
+    ViewData["Title"] = "Engineer Dashboard";
+    var totalActive = Model.MyAssignedIssues - Model.ResolvedIssues;
+    var completionRate = Model.MyAssignedIssues > 0 ? Math.Round((double)Model.ResolvedIssues / Model.MyAssignedIssues * 100, 1) : 0;
+}
+
+<div class="modern-engineer-container">
+    <!-- Enhanced Header with Welcome -->
+    <div class="modern-header-section">
+        <div class="container py-4">
+            <div class="row align-items-center mb-4">
+                <div class="col">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="modern-avatar">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="fw-bold mb-1 modern-title">Engineer Dashboard</h2>
+                            <p class="text-muted mb-0">Welcome back! Here's your workload overview</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex gap-2">
+                        <a asp-action="Assigned" class="btn btn-outline-primary modern-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                            </svg>
+                            My Issues
+                        </a>
+                        <a asp-action="Index" class="btn btn-primary modern-btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                            </svg>
+                            All Issues
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Stats Overview -->
+            <div class="row g-3 mb-5">
+                <div class="col-md-3 col-6">
+                    <div class="modern-stat-card total">
+                        <div class="stat-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">@Model.TotalIssues</h3>
+                            <p class="stat-label">Total Issues</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="modern-stat-card assigned">
+                        <div class="stat-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">@Model.MyAssignedIssues</h3>
+                            <p class="stat-label">My Issues</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="modern-stat-card available">
+                        <div class="stat-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="16"></line>
+                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">@Model.UnassignedIssues</h3>
+                            <p class="stat-label">Available</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="modern-stat-card performance">
+                        <div class="stat-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">@completionRate%</h3>
+                            <p class="stat-label">Completion Rate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secondary Stats -->
+            <div class="row g-3 mb-5">
+                <div class="col-md-4 col-6">
+                    <div class="modern-stat-card-small in-progress">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="stat-icon-small">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12,6 12,12 16,14"></polyline>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="stat-number-small">@Model.InProgressIssues</h4>
+                                <p class="stat-label-small">In Progress</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6">
+                    <div class="modern-stat-card-small resolved">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="stat-icon-small">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="stat-number-small">@Model.ResolvedIssues</h4>
+                                <p class="stat-label-small">Resolved</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="modern-stat-card-small @(Model.OverdueIssues > 0 ? "overdue" : "good")">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="stat-icon-small">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    @if (Model.OverdueIssues > 0)
+                                    {
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                    }
+                                    else
+                                    {
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                                    }
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="stat-number-small">@Model.OverdueIssues</h4>
+                                <p class="stat-label-small">@(Model.OverdueIssues > 0 ? "Need Attention" : "On Track")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-2">
+        <div class="row g-4">
+            <!-- Priority Breakdown -->
+            <div class="col-lg-4">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h5 class="section-title">Priority Breakdown</h5>
+                        <p class="section-subtitle">Active assignments by priority</p>
+                    </div>
+                    <div class="priority-breakdown">
+                        <div class="priority-item high">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="priority-dot high"></span>
+                                    <span class="priority-label">High Priority</span>
+                                </div>
+                                <span class="priority-count">@Model.HighPriorityCount</span>
+                            </div>
+                            @if (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount > 0)
+                            {
+                                <div class="priority-bar">
+                                    <div class="priority-progress high" style="width: @(Math.Round((double)Model.HighPriorityCount / (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount) * 100, 1))%"></div>
+                                </div>
+                            }
+                        </div>
+                        <div class="priority-item medium">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="priority-dot medium"></span>
+                                    <span class="priority-label">Medium Priority</span>
+                                </div>
+                                <span class="priority-count">@Model.MediumPriorityCount</span>
+                            </div>
+                            @if (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount > 0)
+                            {
+                                <div class="priority-bar">
+                                    <div class="priority-progress medium" style="width: @(Math.Round((double)Model.MediumPriorityCount / (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount) * 100, 1))%"></div>
+                                </div>
+                            }
+                        </div>
+                        <div class="priority-item low">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="priority-dot low"></span>
+                                    <span class="priority-label">Low Priority</span>
+                                </div>
+                                <span class="priority-count">@Model.LowPriorityCount</span>
+                            </div>
+                            @if (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount > 0)
+                            {
+                                <div class="priority-bar">
+                                    <div class="priority-progress low" style="width: @(Math.Round((double)Model.LowPriorityCount / (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount) * 100, 1))%"></div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Assigned Issues -->
+            <div class="col-lg-4">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h5 class="section-title">Recent Assignments</h5>
+                        <p class="section-subtitle">Your latest assigned issues</p>
+                    </div>
+                    <div class="recent-issues">
+                        @if (Model.RecentAssignedIssues.Any())
+                        {
+                            @foreach (var issue in Model.RecentAssignedIssues)
+                            {
+                                var priorityClass = issue.Priority?.ToLower() switch
+                                {
+                                    "high" => "priority-high",
+                                    "medium" => "priority-medium",
+                                    "low" => "priority-low",
+                                    _ => "priority-medium"
+                                };
+
+                                var statusClass = issue.Status?.ToLower() switch
+                                {
+                                    "open" => "status-open",
+                                    "inprogress" => "status-in-progress",
+                                    "resolved" => "status-closed",
+                                    "closed" => "status-closed",
+                                    _ => "status-open"
+                                };
+
+                                <div class="issue-item">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="issue-priority @priorityClass"></div>
+                                        <div class="flex-grow-1 min-w-0">
+                                            <h6 class="issue-title-small">@(issue.Title ?? "Untitled Issue")</h6>
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <span class="badge-small @statusClass">@(issue.Status == "InProgress" ? "In Progress" : issue.Status ?? "Open")</span>
+                                                <span class="issue-date">@issue.CreatedAt.ToString("MMM dd")</span>
+                                            </div>
+                                        </div>
+                                        <a asp-action="Details" asp-route-id="@issue.Id" class="btn-icon">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                <circle cx="12" cy="12" r="3"></circle>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="empty-state-small">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                </svg>
+                                <p class="text-muted mb-0">No assigned issues</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Issues -->
+            <div class="col-lg-4">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h5 class="section-title">Available Issues</h5>
+                        <p class="section-subtitle">Unassigned issues you can take</p>
+                    </div>
+                    <div class="recent-issues">
+                        @if (Model.RecentUnassignedIssues.Any())
+                        {
+                            @foreach (var issue in Model.RecentUnassignedIssues)
+                            {
+                                var priorityClass = issue.Priority?.ToLower() switch
+                                {
+                                    "high" => "priority-high",
+                                    "medium" => "priority-medium",
+                                    "low" => "priority-low",
+                                    _ => "priority-medium"
+                                };
+
+                                <div class="issue-item">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="issue-priority @priorityClass"></div>
+                                        <div class="flex-grow-1 min-w-0">
+                                            <h6 class="issue-title-small">@(issue.Title ?? "Untitled Issue")</h6>
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <span class="badge-small status-open">Open</span>
+                                                <span class="issue-date">@issue.CreatedAt.ToString("MMM dd")</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-1">
+                                            <a asp-action="Details" asp-route-id="@issue.Id" class="btn-icon">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                </svg>
+                                            </a>
+                                            <form asp-action="Take" method="post" style="display: inline;">
+                                                <input type="hidden" name="id" value="@issue.Id" />
+                                                <button type="submit" class="btn-icon take" title="Take this issue">
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="empty-state-small">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                </svg>
+                                <p class="text-muted mb-0">No available issues</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row g-4 mt-3">
+            <div class="col-12">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h5 class="section-title">Quick Actions</h5>
+                        <p class="section-subtitle">Common tasks and navigation</p>
+                    </div>
+                    <div class="quick-actions">
+                        <a asp-action="Assigned" class="quick-action-card">
+                            <div class="quick-action-icon assigned">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div>
+                                <h6 class="quick-action-title">My Assigned Issues</h6>
+                                <p class="quick-action-desc">View and manage your assigned issues</p>
+                            </div>
+                        </a>
+                        <a asp-action="Index" class="quick-action-card">
+                            <div class="quick-action-icon all">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14,2 14,8 20,8"></polyline>
+                                </svg>
+                            </div>
+                            <div>
+                                <h6 class="quick-action-title">All Issues</h6>
+                                <p class="quick-action-desc">Browse all issues and find new work</p>
+                            </div>
+                        </a>
+                        @if (Model.OverdueIssues > 0)
+                        {
+                            <a asp-action="Assigned" class="quick-action-card urgent">
+                                <div class="quick-action-icon urgent">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h6 class="quick-action-title">Overdue Issues</h6>
+                                    <p class="quick-action-desc">@Model.OverdueIssues @(Model.OverdueIssues == 1 ? "issue needs" : "issues need") immediate attention</p>
+                                </div>
+                            </a>
+                        }
+                        @if (Model.HighPriorityCount > 0)
+                        {
+                            <a asp-action="Assigned" class="quick-action-card high-priority">
+                                <div class="quick-action-icon high-priority">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="m9 12 2 2 4-4"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h6 class="quick-action-title">High Priority Issues</h6>
+                                    <p class="quick-action-desc">@Model.HighPriorityCount high priority @(Model.HighPriorityCount == 1 ? "issue" : "issues") assigned</p>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="~/css/engineer-modern.css" rel="stylesheet" />
+<link href="~/css/engineer-dashboard.css" rel="stylesheet" />

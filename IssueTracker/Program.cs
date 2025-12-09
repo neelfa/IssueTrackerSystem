@@ -33,14 +33,19 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     try
     {
-        // Only create database if it doesn't exist (preserves existing data)
-        bool databaseCreated = context.Database.EnsureCreated();
+        Console.WriteLine("Checking database and applying migrations...");
         
-        if (databaseCreated)
+        // Apply any pending migrations instead of using EnsureCreated
+        context.Database.Migrate();
+        
+        Console.WriteLine("Database migrations applied successfully.");
+        
+        // Check if we need to seed test users
+        var existingUsers = context.Users.Any();
+        if (!existingUsers)
         {
-            Console.WriteLine("Database created successfully.");
+            Console.WriteLine("No users found, creating sample data...");
             
-            // Add some sample data only if database was just created
             var users = new[]
             {
                 new User { Email = "admin@test.com", Password = "admin123", Role = "Admin" },
@@ -52,18 +57,35 @@ using (var scope = app.Services.CreateScope())
             context.SaveChanges();
             
             Console.WriteLine("Sample users created.");
+            
+            // Debug: Let's verify what was actually saved
+            var savedUsers = context.Users.ToList();
+            foreach (var user in savedUsers)
+            {
+                Console.WriteLine($"User created: {user.Email} with role: '{user.Role}'");
+            }
         }
         else
         {
-            Console.WriteLine("Database already exists, preserving existing data.");
+            Console.WriteLine("Users already exist in database.");
+            
+            // Debug: Let's check the admin user specifically
+            var adminUser = context.Users.FirstOrDefault(u => u.Email == "admin@test.com");
+            if (adminUser != null)
+            {
+                Console.WriteLine($"Admin user found: {adminUser.Email} with role: '{adminUser.Role}'");
+            }
+            else
+            {
+                Console.WriteLine("Admin user not found in database!");
+            }
         }
     }
     catch (Exception ex)
     {
-        // Log the error - for now just write to console
         Console.WriteLine($"Database initialization error: {ex.Message}");
         Console.WriteLine($"Stack trace: {ex.StackTrace}");
-        throw; // Re-throw to see the error in detail
+        throw;
     }
 }
 

@@ -15,6 +15,68 @@ namespace IssueTracker.Controllers
             _context = context;
         }
 
+        // Engineer Dashboard - Overview
+        public async Task<IActionResult> Dashboard()
+        {
+            var authResult = RequireRole("Engineer");
+            if (authResult is not EmptyResult) return authResult;
+
+            var userEmail = GetCurrentUserEmail();
+
+            // Get all issues statistics
+            var totalIssues = await _context.Issues.CountAsync();
+            var myAssignedIssues = await _context.Issues.CountAsync(i => i.AssignedToEmail == userEmail);
+            var unassignedIssues = await _context.Issues.CountAsync(i => string.IsNullOrEmpty(i.AssignedToEmail));
+            var inProgressIssues = await _context.Issues.CountAsync(i => i.Status == "InProgress" && i.AssignedToEmail == userEmail);
+            var resolvedIssues = await _context.Issues.CountAsync(i => (i.Status == "Resolved" || i.Status == "Closed") && i.AssignedToEmail == userEmail);
+            var overdueIssues = await _context.Issues.CountAsync(i => 
+                (i.Status == "Open" || i.Status == "InProgress") && 
+                i.AssignedToEmail == userEmail && 
+                i.CreatedAt < DateTime.UtcNow.AddDays(-7));
+
+            // Get recent assigned issues
+            var recentAssignedIssues = await _context.Issues
+                .Where(i => i.AssignedToEmail == userEmail)
+                .OrderByDescending(i => i.UpdatedAt ?? i.CreatedAt)
+                .Take(5)
+                .ToListAsync();
+
+            // Get recent unassigned issues
+            var recentUnassignedIssues = await _context.Issues
+                .Where(i => string.IsNullOrEmpty(i.AssignedToEmail))
+                .OrderByDescending(i => i.CreatedAt)
+                .Take(5)
+                .ToListAsync();
+
+            // Get priority breakdown for assigned issues
+            var highPriorityCount = await _context.Issues.CountAsync(i => 
+                i.AssignedToEmail == userEmail && i.Priority == "High" && 
+                (i.Status == "Open" || i.Status == "InProgress"));
+            var mediumPriorityCount = await _context.Issues.CountAsync(i => 
+                i.AssignedToEmail == userEmail && i.Priority == "Medium" && 
+                (i.Status == "Open" || i.Status == "InProgress"));
+            var lowPriorityCount = await _context.Issues.CountAsync(i => 
+                i.AssignedToEmail == userEmail && i.Priority == "Low" && 
+                (i.Status == "Open" || i.Status == "InProgress"));
+
+            var viewModel = new EngineerDashboardViewModel
+            {
+                TotalIssues = totalIssues,
+                MyAssignedIssues = myAssignedIssues,
+                UnassignedIssues = unassignedIssues,
+                InProgressIssues = inProgressIssues,
+                ResolvedIssues = resolvedIssues,
+                OverdueIssues = overdueIssues,
+                HighPriorityCount = highPriorityCount,
+                MediumPriorityCount = mediumPriorityCount,
+                LowPriorityCount = lowPriorityCount,
+                RecentAssignedIssues = recentAssignedIssues,
+                RecentUnassignedIssues = recentUnassignedIssues
+            };
+
+            return View(viewModel);
+        }
+
         // Engineer Dashboard - All Issues
         public async Task<IActionResult> Index()
         {
