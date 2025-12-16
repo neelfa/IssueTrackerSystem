@@ -228,5 +228,99 @@ namespace IssueTracker.Controllers
 
             return RedirectToAction(nameof(Details), new { id = issueId });
         }
+
+        // API endpoint for chart data
+        [HttpGet]
+        public async Task<IActionResult> ChartData()
+        {
+            var authResult = RequireRole("Engineer");
+            if (authResult is not EmptyResult) return authResult;
+
+            var userEmail = GetCurrentUserEmail();
+
+            // Basic metrics
+            var totalIssues = await _context.Issues.CountAsync();
+            var myAssignedIssues = await _context.Issues.CountAsync(i => i.AssignedToEmail == userEmail);
+            var unassignedIssues = await _context.Issues.CountAsync(i => string.IsNullOrEmpty(i.AssignedToEmail));
+            var resolvedIssues = await _context.Issues.CountAsync(i => (i.Status == "Resolved" || i.Status == "Closed") && i.AssignedToEmail == userEmail);
+            var completionRate = myAssignedIssues > 0 ? Math.Round((double)resolvedIssues / myAssignedIssues * 100, 1) : 0;
+
+            // Priority breakdown
+            var highPriorityCount = await _context.Issues.CountAsync(i => 
+                i.AssignedToEmail == userEmail && i.Priority == "High" && 
+                (i.Status == "Open" || i.Status == "InProgress"));
+            var mediumPriorityCount = await _context.Issues.CountAsync(i => 
+                i.AssignedToEmail == userEmail && i.Priority == "Medium" && 
+                (i.Status == "Open" || i.Status == "InProgress"));
+            var lowPriorityCount = await _context.Issues.CountAsync(i => 
+                i.AssignedToEmail == userEmail && i.Priority == "Low" && 
+                (i.Status == "Open" || i.Status == "InProgress"));
+
+            // Status breakdown
+            var openIssues = await _context.Issues.CountAsync(i => i.Status == "Open" && i.AssignedToEmail == userEmail);
+            var inProgressIssues = await _context.Issues.CountAsync(i => i.Status == "InProgress" && i.AssignedToEmail == userEmail);
+            var overdueIssues = await _context.Issues.CountAsync(i => 
+                (i.Status == "Open" || i.Status == "InProgress") && 
+                i.AssignedToEmail == userEmail && 
+                i.CreatedAt < DateTime.UtcNow.AddDays(-7));
+
+            // Trend data - last 7 days
+            var trendLabels = new List<string>();
+            var createdData = new List<int>();
+            var resolvedData = new List<int>();
+
+            for (int i = 6; i >= 0; i--)
+            {
+                var date = DateTime.UtcNow.Date.AddDays(-i);
+                var nextDate = date.AddDays(1);
+                
+                trendLabels.Add(date.ToString("MMM dd"));
+                
+                var created = await _context.Issues.CountAsync(i => 
+                    i.CreatedAt.Date == date && 
+                    (string.IsNullOrEmpty(userEmail) || i.AssignedToEmail == userEmail));
+                
+                var resolved = await _context.Issues.CountAsync(i => 
+                    i.UpdatedAt.HasValue && i.UpdatedAt.Value.Date == date && 
+                    (i.Status == "Resolved" || i.Status == "Closed") && 
+                    i.AssignedToEmail == userEmail);
+                
+                createdData.Add(created);
+                resolvedData.Add(resolved);
+            }
+
+            var chartData = new
+            {
+                metrics = new
+                {
+                    totalIssues,
+                    myIssues = myAssignedIssues,
+                    available = unassignedIssues,
+                    completionRate
+                },
+                priority = new
+                {
+                    high = highPriorityCount,
+                    medium = mediumPriorityCount,
+                    low = lowPriorityCount
+                },
+                status = new
+                {
+                    open = openIssues,
+                    inProgress = inProgressIssues,
+                    resolved = resolvedIssues,
+                    overdue = overdueIssues
+                },
+                trend = new
+                {
+                    labels = trendLabels,
+                    created = createdData,
+                    resolved = resolvedData
+                },
+                performance = completionRate
+            };
+
+            return Json(chartData);
+        }
     }
 }

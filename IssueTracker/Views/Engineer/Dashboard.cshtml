@@ -6,9 +6,9 @@
     var completionRate = Model.MyAssignedIssues > 0 ? Math.Round((double)Model.ResolvedIssues / Model.MyAssignedIssues * 100, 1) : 0;
 }
 
-<div class="modern-engineer-container">
-    <!-- Enhanced Header with Welcome -->
-    <div class="modern-header-section">
+<div class="modern-engineer-container chart-dashboard">
+    <!-- Enhanced Header with Welcome - Now White -->
+    <div class="modern-header-section white-header">
         <div class="container py-4">
             <div class="row align-items-center mb-4">
                 <div class="col">
@@ -20,7 +20,7 @@
                         </div>
                         <div>
                             <h2 class="fw-bold mb-1 modern-title">Engineer Dashboard</h2>
-                            <p class="text-muted mb-0">Welcome back! Here's your workload overview</p>
+                            <p class="text-muted mb-0">Professional data insights replacing basic cards with interactive charts</p>
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                         </a>
                         <a asp-action="Index" class="btn btn-primary modern-btn-primary">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <path d="M14 2H6a2 2 0 0 2 2v16a2 2 0 0 2 2h12a2 2 0 0 2-2V8z"></path>
                                 <polyline points="14,2 14,8 20,8"></polyline>
                             </svg>
                             All Issues
@@ -43,192 +43,140 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Main Stats Overview -->
-            <div class="row g-3 mb-5">
-                <div class="col-md-3 col-6">
-                    <div class="modern-stat-card total">
-                        <div class="stat-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14,2 14,8 20,8"></polyline>
-                            </svg>
-                        </div>
-                        <div class="stat-content">
-                            <h3 class="stat-number">@Model.TotalIssues</h3>
-                            <p class="stat-label">Total Issues</p>
-                        </div>
-                    </div>
+    <div class="container-fluid px-4">
+        <!-- Charts Grid - Professional Layout -->
+        <div class="charts-grid mb-4">
+            <!-- Key Metrics Bar Chart -->
+            <div class="chart-container metrics-chart-container">
+                <div class="chart-header">
+                    <h5 class="chart-title">Key Performance Metrics</h5>
+                    <p class="chart-subtitle">Overview of workload and performance indicators</p>
                 </div>
-                <div class="col-md-3 col-6">
-                    <div class="modern-stat-card assigned">
-                        <div class="stat-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                            </svg>
-                        </div>
-                        <div class="stat-content">
-                            <h3 class="stat-number">@Model.MyAssignedIssues</h3>
-                            <p class="stat-label">My Issues</p>
-                        </div>
-                    </div>
+                <div class="chart-body">
+                    <canvas id="metricsChart"></canvas>
+                    <div class="chart-loading" id="metricsLoading">Loading metrics...</div>
                 </div>
-                <div class="col-md-3 col-6">
-                    <div class="modern-stat-card available">
-                        <div class="stat-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="16"></line>
-                                <line x1="8" y1="12" x2="16" y2="12"></line>
-                            </svg>
-                        </div>
-                        <div class="stat-content">
-                            <h3 class="stat-number">@Model.UnassignedIssues</h3>
-                            <p class="stat-label">Available</p>
-                        </div>
-                    </div>
+            </div>
+            
+            <!-- Performance Gauge -->
+            <div class="chart-container gauge-chart-container">
+                <div class="chart-header">
+                    <h5 class="chart-title">Success Rate</h5>
+                    <p class="chart-subtitle">Issue completion performance</p>
                 </div>
-                <div class="col-md-3 col-6">
-                    <div class="modern-stat-card performance">
-                        <div class="stat-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22,4 12,14.01 9,11.01"></polyline>
-                            </svg>
-                        </div>
-                        <div class="stat-content">
-                            <h3 class="stat-number">@completionRate%</h3>
-                            <p class="stat-label">Completion Rate</p>
-                        </div>
+                <div class="chart-body">
+                    <canvas id="performanceChart"></canvas>
+                    <div class="chart-loading" id="performanceLoading">Loading performance...</div>
+                </div>
+            </div>
+            
+            <!-- Priority Donut Chart -->
+            <div class="chart-container priority-chart-container">
+                <div class="chart-header">
+                    <h5 class="chart-title">Priority Distribution</h5>
+                    <p class="chart-subtitle">Active issues by priority level</p>
+                </div>
+                <div class="chart-body">
+                    <canvas id="priorityChart"></canvas>
+                    <div class="chart-loading" id="priorityLoading">Loading priorities...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secondary Charts -->
+        <div class="row g-4 mb-4">
+            <!-- Status Distribution -->
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h5 class="chart-title">Workload Distribution</h5>
+                        <p class="chart-subtitle">Issues by current status</p>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="statusChart"></canvas>
+                        <div class="chart-loading" id="statusLoading">Loading status...</div>
                     </div>
                 </div>
             </div>
-
-            <!-- Secondary Stats -->
-            <div class="row g-3 mb-5">
-                <div class="col-md-4 col-6">
-                    <div class="modern-stat-card-small in-progress">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="stat-icon-small">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polyline points="12,6 12,12 16,14"></polyline>
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="stat-number-small">@Model.InProgressIssues</h4>
-                                <p class="stat-label-small">In Progress</p>
-                            </div>
-                        </div>
+            
+            <!-- Issue Trends -->
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h5 class="chart-title">7-Day Activity Trend</h5>
+                        <p class="chart-subtitle">Issues created vs resolved over time</p>
                     </div>
-                </div>
-                <div class="col-md-4 col-6">
-                    <div class="modern-stat-card-small resolved">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="stat-icon-small">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                    <polyline points="22,4 12,14.01 9,11.01"></polyline>
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="stat-number-small">@Model.ResolvedIssues</h4>
-                                <p class="stat-label-small">Resolved</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-12">
-                    <div class="modern-stat-card-small @(Model.OverdueIssues > 0 ? "overdue" : "good")">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="stat-icon-small">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    @if (Model.OverdueIssues > 0)
-                                    {
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                    }
-                                    else
-                                    {
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                        <polyline points="22,4 12,14.01 9,11.01"></polyline>
-                                    }
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="stat-number-small">@Model.OverdueIssues</h4>
-                                <p class="stat-label-small">@(Model.OverdueIssues > 0 ? "Need Attention" : "On Track")</p>
-                            </div>
-                        </div>
+                    <div class="chart-body">
+                        <canvas id="trendChart"></canvas>
+                        <div class="chart-loading" id="trendLoading">Loading trends...</div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="container py-2">
-        <div class="row g-4">
-            <!-- Priority Breakdown -->
-            <div class="col-lg-4">
-                <div class="dashboard-section">
-                    <div class="section-header">
-                        <h5 class="section-title">Priority Breakdown</h5>
-                        <p class="section-subtitle">Active assignments by priority</p>
-                    </div>
-                    <div class="priority-breakdown">
-                        <div class="priority-item high">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="priority-dot high"></span>
-                                    <span class="priority-label">High Priority</span>
-                                </div>
-                                <span class="priority-count">@Model.HighPriorityCount</span>
-                            </div>
-                            @if (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount > 0)
-                            {
-                                <div class="priority-bar">
-                                    <div class="priority-progress high" style="width: @(Math.Round((double)Model.HighPriorityCount / (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount) * 100, 1))%"></div>
-                                </div>
-                            }
-                        </div>
-                        <div class="priority-item medium">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="priority-dot medium"></span>
-                                    <span class="priority-label">Medium Priority</span>
-                                </div>
-                                <span class="priority-count">@Model.MediumPriorityCount</span>
-                            </div>
-                            @if (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount > 0)
-                            {
-                                <div class="priority-bar">
-                                    <div class="priority-progress medium" style="width: @(Math.Round((double)Model.MediumPriorityCount / (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount) * 100, 1))%"></div>
-                                </div>
-                            }
-                        </div>
-                        <div class="priority-item low">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="priority-dot low"></span>
-                                    <span class="priority-label">Low Priority</span>
-                                </div>
-                                <span class="priority-count">@Model.LowPriorityCount</span>
-                            </div>
-                            @if (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount > 0)
-                            {
-                                <div class="priority-bar">
-                                    <div class="priority-progress low" style="width: @(Math.Round((double)Model.LowPriorityCount / (Model.HighPriorityCount + Model.MediumPriorityCount + Model.LowPriorityCount) * 100, 1))%"></div>
-                                </div>
-                            }
-                        </div>
-                    </div>
+        <!-- Summary Stats Cards -->
+        <div class="stats-summary mb-4">
+            <div class="stat-card">
+                <div class="stat-icon primary">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14,2 14,8 20,8"></polyline>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <h3>@Model.TotalIssues</h3>
+                    <p>Total Issues in System</p>
                 </div>
             </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon info">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <h3>@Model.MyAssignedIssues</h3>
+                    <p>Assigned to Me</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon warning">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <h3>@Model.InProgressIssues</h3>
+                    <p>Currently Active</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon success">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <h3>@Model.ResolvedIssues</h3>
+                    <p>Successfully Resolved</p>
+                </div>
+            </div>
+        </div>
 
+        <!-- Issues Lists -->
+        <div class="row g-4">
             <!-- Recent Assigned Issues -->
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="dashboard-section">
                     <div class="section-header">
                         <h5 class="section-title">Recent Assignments</h5>
@@ -291,7 +239,7 @@
             </div>
 
             <!-- Available Issues -->
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="dashboard-section">
                     <div class="section-header">
                         <h5 class="section-title">Available Issues</h5>
@@ -429,3 +377,98 @@
 
 <link href="~/css/engineer-modern.css" rel="stylesheet" />
 <link href="~/css/engineer-dashboard.css" rel="stylesheet" />
+<link href="~/css/dashboard-charts.css" rel="stylesheet" />
+
+@section Scripts {
+    <script src="~/js/dashboard-charts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize chart system
+            const chartManager = new DashboardCharts();
+            
+            // Hide loading indicators initially
+            function hideLoading(chartId) {
+                const loading = document.getElementById(chartId + 'Loading');
+                if (loading) loading.style.display = 'none';
+            }
+            
+            // Show loading indicators
+            function showLoading(chartId) {
+                const loading = document.getElementById(chartId + 'Loading');
+                if (loading) loading.style.display = 'flex';
+            }
+            
+            // Show all loading indicators
+            ['metrics', 'priority', 'status', 'trend', 'performance'].forEach(showLoading);
+            
+            // Fetch chart data and initialize charts
+            fetch('@Url.Action("ChartData", "Engineer")')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Chart data loaded:', data);
+                    
+                    // Create all charts
+                    chartManager.createMetricsChart('metricsChart', data.metrics);
+                    hideLoading('metrics');
+                    
+                    chartManager.createPriorityChart('priorityChart', data.priority);
+                    hideLoading('priority');
+                    
+                    chartManager.createStatusChart('statusChart', data.status);
+                    hideLoading('status');
+                    
+                    chartManager.createTrendChart('trendChart', data.trend);
+                    hideLoading('trend');
+                    
+                    chartManager.createGaugeChart('performanceChart', data.performance);
+                    hideLoading('performance');
+                    
+                    console.log('All charts initialized successfully');
+                })
+                .catch(error => {
+                    console.error('Error loading chart data:', error);
+                    // Hide loading indicators on error
+                    ['metrics', 'priority', 'status', 'trend', 'performance'].forEach(hideLoading);
+                });
+                
+            // Handle window resize for responsive charts
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    Object.values(chartManager.charts).forEach(chart => {
+                        if (chart) chart.resize();
+                    });
+                }, 250);
+            });
+        });
+    </script>
+}
+
+<style>
+    /* White Header Override */
+    .white-header {
+        background: white !important;
+        border-bottom: 1px solid #e2e8f0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .white-header .modern-title {
+        color: #1a202c !important;
+    }
+    
+    .white-header .text-muted {
+        color: #64748b !important;
+    }
+    
+    .white-header .modern-avatar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>

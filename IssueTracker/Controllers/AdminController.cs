@@ -45,6 +45,98 @@ namespace IssueTracker.Controllers
             return View(model);
         }
 
+        // API endpoint for chart data
+        [HttpGet]
+        public async Task<IActionResult> ChartData()
+        {
+            var authResult = RequireRole("Admin");
+            if (authResult is not EmptyResult) return authResult;
+
+            // Issue metrics
+            var totalIssues = await _context.Issues.CountAsync();
+            var openIssues = await _context.Issues.CountAsync(i => i.Status == "Open");
+            var inProgressIssues = await _context.Issues.CountAsync(i => i.Status == "InProgress");
+            var closedIssues = await _context.Issues.CountAsync(i => i.Status == "Resolved" || i.Status == "Closed");
+
+            // User statistics
+            var customersCount = await _context.Users.CountAsync(u => u.Role == "Customer");
+            var engineersCount = await _context.Users.CountAsync(u => u.Role == "Engineer");
+            var adminsCount = await _context.Users.CountAsync(u => u.Role == "Admin");
+
+            // Priority breakdown
+            var highPriorityCount = await _context.Issues.CountAsync(i => 
+                i.Priority == "High" && (i.Status == "Open" || i.Status == "InProgress"));
+            var mediumPriorityCount = await _context.Issues.CountAsync(i => 
+                i.Priority == "Medium" && (i.Status == "Open" || i.Status == "InProgress"));
+            var lowPriorityCount = await _context.Issues.CountAsync(i => 
+                i.Priority == "Low" && (i.Status == "Open" || i.Status == "InProgress"));
+
+            // Performance metrics
+            var completionRate = totalIssues > 0 ? Math.Round((double)closedIssues / totalIssues * 100, 1) : 0;
+            var responseTime = 24.5; // Example average response time in hours
+
+            // Trend data - last 7 days
+            var trendLabels = new List<string>();
+            var createdData = new List<int>();
+            var resolvedData = new List<int>();
+
+            for (int i = 6; i >= 0; i--)
+            {
+                var date = DateTime.UtcNow.Date.AddDays(-i);
+                var nextDate = date.AddDays(1);
+                
+                trendLabels.Add(date.ToString("MMM dd"));
+                
+                var created = await _context.Issues.CountAsync(i => i.CreatedAt.Date == date);
+                var resolved = await _context.Issues.CountAsync(i => 
+                    i.UpdatedAt.HasValue && i.UpdatedAt.Value.Date == date && 
+                    (i.Status == "Resolved" || i.Status == "Closed"));
+                
+                createdData.Add(created);
+                resolvedData.Add(resolved);
+            }
+
+            var chartData = new
+            {
+                metrics = new
+                {
+                    totalIssues,
+                    openIssues,
+                    inProgressIssues,
+                    closedIssues,
+                    completionRate,
+                    responseTime
+                },
+                users = new
+                {
+                    customers = customersCount,
+                    engineers = engineersCount,
+                    admins = adminsCount
+                },
+                priority = new
+                {
+                    high = highPriorityCount,
+                    medium = mediumPriorityCount,
+                    low = lowPriorityCount
+                },
+                status = new
+                {
+                    open = openIssues,
+                    inProgress = inProgressIssues,
+                    resolved = closedIssues
+                },
+                trend = new
+                {
+                    labels = trendLabels,
+                    created = createdData,
+                    resolved = resolvedData
+                },
+                performance = completionRate
+            };
+
+            return Json(chartData);
+        }
+
         // GET: /Admin/ExportReport
         public async Task<IActionResult> ExportReport()
         {

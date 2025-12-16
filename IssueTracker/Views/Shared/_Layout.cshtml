@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/IssueTracker.styles.css" asp-append-version="true" />
+    
+    <!-- Chart.js for dashboard charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 </head>
 <body class="@(Context.Session.GetString("UserEmail") != null ? "authenticated-layout" : "")">
     @if (Context.Session.GetString("UserEmail") != null)
